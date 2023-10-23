@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.1.4 <4.0.0'
+  sdk: '>=3.1.2 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -34,7 +34,19 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  # Icons
   cupertino_icons: ^1.0.2
+  iconsax: ^0.0.8
+
+  # State Management
+  get: ^4.6.5
+  get_storage: ^2.1.1
+
+  # Utility Packages
+  http: ^1.1.0
+  intl: ^0.18.1
+  logger: ^2.0.1
+  url_launcher: ^6.1.12
 
 dev_dependencies:
   flutter_test:
@@ -58,31 +70,37 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
-    - fonts/poppins/Poppins-Black.ttf
-    - fonts/poppins/Poppins-BlackItalic.ttf
-    - fonts/poppins/Poppins-Bold.ttf
-    - fonts/poppins/Poppins-BoldItalic.ttf
-    - fonts/poppins/Poppins-ExtraBold.ttf
-    - fonts/poppins/Poppins-ExtraBoldItalic.ttf
-    - fonts/poppins/Poppins-ExtraLight.ttf
-    - fonts/poppins/Poppins-ExtraLightItalic.ttf
-    - fonts/poppins/Poppins-Italic.ttf
-    - fonts/poppins/Poppins-Italic.ttf
-    - fonts/poppins/Poppins-Light.ttf
-    - fonts/poppins/Poppins-LightItalic.ttf
-    - fonts/poppins/Poppins-Medium.ttf
-    - fonts/poppins/Poppins-MediumItalic.ttf
-    - fonts/poppins/Poppins-Regular.ttf
-    - fonts/poppins/Poppins-SemiBold.ttf
-    - fonts/poppins/Poppins-SemiBoldItalic.ttf
-    - fonts/poppins/Poppins-Thin.ttf
-    - fonts/poppins/Poppins-ThinItalic.ttf
+
+    - assets/images/
+    - assets/icons/brands
+    - assets/logo/
+
+
+    - assets/fonts/poppins/Poppins-Black.ttf
+    - assets/fonts/poppins/Poppins-BlackItalic.ttf
+    - assets/fonts/poppins/Poppins-Bold.ttf
+    - assets/fonts/poppins/Poppins-BoldItalic.ttf
+    - assets/fonts/poppins/Poppins-ExtraBold.ttf
+    - assets/fonts/poppins/Poppins-ExtraBoldItalic.ttf
+    - assets/fonts/poppins/Poppins-ExtraLight.ttf
+    - assets/fonts/poppins/Poppins-ExtraLightItalic.ttf
+    - assets/fonts/poppins/Poppins-Italic.ttf
+    - assets/fonts/poppins/Poppins-Italic.ttf
+    - assets/fonts/poppins/Poppins-Light.ttf
+    - assets/fonts/poppins/Poppins-LightItalic.ttf
+    - assets/fonts/poppins/Poppins-Medium.ttf
+    - assets/fonts/poppins/Poppins-MediumItalic.ttf
+    - assets/fonts/poppins/Poppins-Regular.ttf
+    - assets/fonts/poppins/Poppins-SemiBold.ttf
+    - assets/fonts/poppins/Poppins-SemiBoldItalic.ttf
+    - assets/fonts/poppins/Poppins-Thin.ttf
+    - assets/fonts/poppins/Poppins-ThinItalic.ttf
     
-    - fonts/coolvetica/coolvetica compressed hv.otf
-    - fonts/coolvetica/coolvetica condensed rg.otf
-    - fonts/coolvetica/coolvetica crammed rg.otf
-    - fonts/coolvetica/coolvetica rg it.otf
-    - fonts/coolvetica/coolvetica rg.otf
+    - assets/fonts/coolvetica/coolvetica compressed hv.otf
+    - assets/fonts/coolvetica/coolvetica condensed rg.otf
+    - assets/fonts/coolvetica/coolvetica crammed rg.otf
+    - assets/fonts/coolvetica/coolvetica rg it.otf
+    - assets/fonts/coolvetica/coolvetica rg.otf
 
 
   # To add assets to your application, add an assets section, like this:
