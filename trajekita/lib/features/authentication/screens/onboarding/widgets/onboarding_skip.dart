@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trajekita/features/authentication/controllers.onboarding/onboarding_controller.dart';
 import 'package:trajekita/utils/constants/sizes.dart';
 import 'package:trajekita/utils/device/device_utility.dart';
 
@@ -13,9 +14,8 @@ class OnBoardingSkip extends StatelessWidget {
       top: TDeviceUtils.getAppBarHeight(),
       right: TSizes.defaultSpace,
       child: TextButton(
-        onPressed: () {},
-        child: const Text('Passer >>'),
-      ),
+          onPressed: () => OnBoardingController.instance.skipPage(),
+          child: const Text('Passer ->')),
     );
   }
 }

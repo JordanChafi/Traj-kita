@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:trajekita/features/authentication/controllers.onboarding/onboarding_controller.dart';
+import 'package:trajekita/features/authentication/screens/onboarding/widgets/onboarding_dot_navigation.dart';
+import 'package:trajekita/features/authentication/screens/onboarding/widgets/onboarding_next_button.dart';
 import 'package:trajekita/utils/constants/image_strings.dart';
 import 'package:trajekita/utils/constants/text_strings.dart';
-
 import 'widgets/onboarding_page.dart';
 import 'widgets/onboarding_skip.dart';
 
@@ -10,11 +13,14 @@ class OnBoardingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(OnBoardingController());
     return Scaffold(
       body: Stack(
         children: [
           /// Scrollable Pages
           PageView(
+            controller: controller.pageController,
+            onPageChanged: controller.updatePageIndicator,
             children: const [
               OnBoardingPage(
                 image: TImages.onBoardingImage1,
@@ -36,6 +42,12 @@ class OnBoardingScreen extends StatelessWidget {
 
           /// Skip Button
           const OnBoardingSkip(),
+
+          /// Dot Navigation SmoothPageIndicator
+          const OnBoardingDotNavigation(),
+
+          /// Circular Button
+          const OnBoardingNextButton(),
         ],
       ),
     );
