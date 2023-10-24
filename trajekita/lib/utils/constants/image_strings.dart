@@ -11,4 +11,7 @@ class TImages {
       "assets/images/onboarding_img/onboardingImage2";
   static const String onBoardingImage3 =
       "assets/images/onboarding_img/onboardingImage3";
+
+  // Social
+  static const String google = "assets/logo";
 }
