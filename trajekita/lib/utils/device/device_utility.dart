@@ -1,11 +1,10 @@
 import 'dart:io';
-import 'dart:js';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class TDeviceUtils {
   static void hideKeyboard(BuildContext context) {
@@ -89,10 +88,26 @@ class TDeviceUtils {
 
   static Future<bool> hasInternetConnection() async {
     try {
-      final result = await InternetAddress.lookup('exmaple.com');
+      final result = await InternetAddress.lookup('example.com');
       return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
     } on SocketException catch (_) {
       return false;
+    }
+  }
+
+  static bool isIOS() {
+    return Platform.isIOS;
+  }
+
+  static bool isAndroid() {
+    return Platform.isAndroid;
+  }
+
+  static void launchUrl(String url) async {
+    if (await canLaunchUrlString(url)) {
+      await canLaunchUrlString(url);
+    } else {
+      throw 'Impossible de démarrer $url';
     }
   }
 }
