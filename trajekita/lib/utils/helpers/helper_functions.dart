@@ -68,7 +68,7 @@ class THelperFunctions {
     return MediaQuery.of(Get.context!).size.height;
   }
 
-  static double borderWidth() {
+  static double screenWidth() {
     return MediaQuery.of(Get.context!).size.width;
   }
 
