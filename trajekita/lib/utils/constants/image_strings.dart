@@ -29,4 +29,9 @@ class TImages {
   // choice btw offer or find
   static const String choiceImage =
       "assets/images/choiceBtwOfferOrFind_img/choiceImg.png";
+
+  // side bar
+  static const String sidebarProfile = "assets/images/sidebar/profile.png";
+
+  static const String sidebarBg = "assets/images/sidebar/bg.jpeg";
 }
