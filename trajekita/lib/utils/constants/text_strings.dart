@@ -18,10 +18,12 @@ class TTexts {
   static const String email = "Email";
   static const String password = "Mot de Passe";
   static const String newPassword = "Nouveau Mot de Passe";
-  static const String phoneNumber = "N° Tel";
+  static const String phoneNumber = "Numéro de Téléphone";
   static const String rememberMe = "Se souvenir de Moi";
   static const String forgotPassword = "Mot de Passe oublié";
   static const String signIn = "Se Connecter";
+  static const String signUp = "S'Inscrire";
+  static const String submit = "Valider";
   static const String createAccount = "Créer un compte";
   static const String iAgreeTo = "J'accepte de";
   static const String privacyPolicy = "Politique de Confidentialité";
@@ -36,9 +38,26 @@ class TTexts {
   static const String loginSubtitle =
       "Renseignez les champs pour vous connecter";
   static const String registerTitle = "Inscription";
+
+  // ForgotPassword Texts
   static const String forgotPasswordTitle = "Mot de passe oublié";
   static const String forgotPasswordSubtitle =
       "Renseignez le champs pour vous réinitialiser votre mot de passe";
+
+  static const String resetViaEmail = "Réinitialiser par Email.";
+  static const String resetViaPhone = "Réinitialiser par Téléphone.";
+  static const String forgotPasswordTitle1 = "Faites un choix";
+  static const String forgotPasswordSubtitle1 =
+      "Sélectionnez une option pour réinitialiser ";
+
+  // Forgot Password via phone - Text
+  static const String forgotPhoneSubtitle =
+      "Entrez votre N°Téléphone enregistré pour recevoir le code. ";
+
+  // Forgot Password via email - Text
+  static const String forgotEmailSubtitle =
+      "Entrez votre Email enregistré pour recevoir le code. ";
+
   static const String changeYourPasswordTitle =
       "Code de réinitialisation envoyé";
   static const String changeYourPasswordSubtitle =
@@ -52,4 +71,21 @@ class TTexts {
   static const String yourAccountCreatedsubtitle =
       "Bienvenu(e)! Profitez au max.";
   static const String orSignInWith = "Ou Connectez-vous avec";
+  static const String and = "et";
+
+  // Welcome Screen texts
+  static const String welcomeTitle = "Bienvenu(e) chez vous!";
+  static const String welcomeSubtitle =
+      "Nous espérons que vous passerez de meilleurs moments.";
+
+  // OTP Screen texts
+  static const String otpTitle = "CO\nDE";
+  static const String otpSubtitle = "Vérification";
+  static const String otpMessage = "Entrer le code reçu";
+
+  // reset password Screen texts
+  static const String resetTitle = "Mot de Passe";
+  static const String resetSubtitle =
+      "Veuillez saisir votre nouveau mot de passe";
+  static const String confirmPassword = "Confirmer Mot de Passe";
 }

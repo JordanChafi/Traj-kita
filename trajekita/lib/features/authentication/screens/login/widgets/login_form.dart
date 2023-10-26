@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:trajekita/features/authentication/screens/forgotPassword/forgotPassword_options/forgot_password_btn_modal_bottom_sheet.dart';
+import 'package:trajekita/features/authentication/screens/register/signup.dart';
 import 'package:trajekita/utils/constants/sizes.dart';
 import 'package:trajekita/utils/constants/text_strings.dart';
 
@@ -48,8 +51,15 @@ class TLoginForm extends StatelessWidget {
               ),
 
               /// Forgot Password
-              TextButton(
-                  onPressed: () {}, child: const Text(TTexts.forgotPassword)),
+              Align(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    ForgotPasswordScreen.modalBottomSheet(context);
+                  },
+                  child: const Text(TTexts.forgotPassword),
+                ),
+              )
             ],
           ),
           const SizedBox(height: TSizes.spaceBtwSections),
@@ -70,7 +80,7 @@ class TLoginForm extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(
-              onPressed: () {},
+              onPressed: () => Get.to(() => const SignupScreen()),
               child: const Text(TTexts.createAccount),
             ),
           ),
