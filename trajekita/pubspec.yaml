@@ -80,38 +80,39 @@ flutter:
 
     - assets/images/onboarding_img/
     - assets/logo/
-    - assets/videos/
+    - assets/
+    # - assets/videos/
     - assets/icons/brands/
     - assets/images/welcome_img/
-    - assets/images/forgot_password/
+    # - assets/images/forgot_password/
 
   fonts:
     - family: Poppins
       fonts:
-        - asset: fonts/poppins/Poppins-Black.ttf
-        - asset: fonts/poppins/Poppins-BlackItalic.ttf
-        - asset: fonts/poppins/Poppins-Bold.ttf
-        - asset: fonts/poppins/Poppins-BoldItalic.ttf
-        - asset: fonts/poppins/Poppins-ExtraBold.ttf
-        - asset: fonts/poppins/Poppins-ExtraBoldItalic.ttf
-        - asset: fonts/poppins/Poppins-ExtraLight.ttf
-        - asset: fonts/poppins/Poppins-ExtraLightItalic.ttf
-        - asset: fonts/poppins/Poppins-Italic.ttf
-        - asset: fonts/poppins/Poppins-Light.ttf
-        - asset: fonts/poppins/Poppins-LightItalic.ttf
-        - asset: fonts/poppins/Poppins-Medium.ttf
-        - asset: fonts/poppins/Poppins-MediumItalic.ttf
-        - asset: fonts/poppins/Poppins-Regular.ttf
-        - asset: fonts/poppins/Poppins-SemiBold.ttf
-        - asset: fonts/poppins/Poppins-Thin.ttf
-        - asset: fonts/poppins/Poppins-ThinItalic.ttf
+        - asset: assets/fonts/poppins/Poppins-Black.ttf
+        - asset: assets/fonts/poppins/Poppins-BlackItalic.ttf
+        - asset: assets/fonts/poppins/Poppins-Bold.ttf
+        - asset: assets/fonts/poppins/Poppins-BoldItalic.ttf
+        - asset: assets/fonts/poppins/Poppins-ExtraBold.ttf
+        - asset: assets/fonts/poppins/Poppins-ExtraBoldItalic.ttf
+        - asset: assets/fonts/poppins/Poppins-ExtraLight.ttf
+        - asset: assets/fonts/poppins/Poppins-ExtraLightItalic.ttf
+        - asset: assets/fonts/poppins/Poppins-Italic.ttf
+        - asset: assets/fonts/poppins/Poppins-Light.ttf
+        - asset: assets/fonts/poppins/Poppins-LightItalic.ttf
+        - asset: assets/fonts/poppins/Poppins-Medium.ttf
+        - asset: assets/fonts/poppins/Poppins-MediumItalic.ttf
+        - asset: assets/fonts/poppins/Poppins-Regular.ttf
+        - asset: assets/fonts/poppins/Poppins-SemiBold.ttf
+        - asset: assets/fonts/poppins/Poppins-Thin.ttf
+        - asset: assets/fonts/poppins/Poppins-ThinItalic.ttf
     - family: Coolvetica
       fonts:
-        - asset: fonts/coolvetica/coolvetica compressed hv.otf
-        - asset: fonts/coolvetica/coolvetica condensed rg.otf
-        - asset: fonts/coolvetica/coolvetica crammed rg.otf
-        - asset: fonts/coolvetica/coolvetica rg it.otf
-        - asset: fonts/coolvetica/coolvetica rg.otf
+        - asset: assets/fonts/coolvetica/coolvetica compressed hv.otf
+        - asset: assets/fonts/coolvetica/coolvetica condensed rg.otf
+        - asset: assets/fonts/coolvetica/coolvetica crammed rg.otf
+        - asset: assets/fonts/coolvetica/coolvetica rg it.otf
+        - asset: assets/fonts/coolvetica/coolvetica rg.otf
 
 
 

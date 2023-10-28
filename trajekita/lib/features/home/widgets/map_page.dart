@@ -23,7 +23,7 @@ class _MapPageState extends State<MapPage> {
 
   static const LatLng _pGooglePlex = LatLng(37.4223, -122.0848);
   static const LatLng _pApplePark = LatLng(37.3346, -122.0090);
-  LatLng? _currentP = null;
+  LatLng? _currentP = _pGooglePlex;
 
   Map<PolylineId, Polyline> polylines = {};
 

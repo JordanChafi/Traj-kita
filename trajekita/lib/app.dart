@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trajekita/features/authentication/screens/onboarding/onboarding.dart';
+import 'package:trajekita/features/home/home_screen.dart';
+import 'package:trajekita/features/home/widgets/map_page.dart';
 import 'package:trajekita/utils/theme/theme.dart';
 
 class App extends StatelessWidget {
@@ -15,7 +17,7 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       defaultTransition: Transition.leftToRightWithFade,
       transitionDuration: const Duration(milliseconds: 500),
-      home: const OnBoardingScreen(),
+      home: OnBoardingScreen(),
     );
   }
 }
