@@ -49,5 +49,14 @@
 	<key>Want to display location on map, and track it.</key>
 	<string>NSLocationAlwaysAndWhenInUseUsageDescription</string>
 	<key>Want to display location on map, and track it.</key>
+
+	/// Permissions Appareil photo
+	<key>NSCameraUsageDescription</key>
+	<string>Your description about why you need the camera</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Your description about why you need the photo library</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Your description about why you need the microphone</string>
+
 </dict>
 </plist>

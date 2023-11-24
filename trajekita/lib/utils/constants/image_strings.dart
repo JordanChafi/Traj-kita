@@ -1,8 +1,21 @@
 class TImages {
   //App Logo
   static const String darkAppLogo =
-      "assets/logo/darkLogo.png"; //lien pour le logo en version dark
-  static const String lightAppLogo = "assets/logo/lightLogo.png";
+      "assets/images/logo/Logo_dark.png"; //lien pour le logo en version dark
+  static const String lightAppLogo = "assets/images/logo/logo.png";
+
+  // ICon Social
+  static const String darkTwitter =
+      "assets/images/logo/social/twitter-x.png"; //lien pour le logo en version dark
+  static const String lightTwitter = "assets/images/logo/social/x.png";
+
+  static const String darkFacebook =
+      'assets/images/logo/social/facebook.png'; //lien pour le logo en version dark
+  static const String lightFacebook = 'assets/images/logo/social/fb.png';
+
+  static const String darkInstagram =
+      'assets/images/logo/social/instagram.png'; //lien pour le logo en version dark
+  static const String lightInstagram = 'assets/images/logo/social/insta.jpeg';
 
   // Onboarding Images
   static const String onBoardingImage1 =
@@ -30,8 +43,16 @@ class TImages {
   static const String choiceImage =
       "assets/images/choiceBtwOfferOrFind_img/choiceImg.png";
 
-  // side bar
+  // sidebar
   static const String sidebarProfile = "assets/images/sidebar/profile.png";
-
   static const String sidebarBg = "assets/images/sidebar/bg.jpeg";
+
+  // PaymentMethod
+  static const String momoMtn = "assets/images/logo/paymentMethod/momo1.png";
+  static const String lightDjamo =
+      "assets/images/logo/paymentMethod/djamoLight.png";
+  static const String darkDjamo =
+      "assets/images/logo/paymentMethod/djamoDark.png";
+  static const String lightVisa =
+      "assets/images/logo/paymentMethod/visaLight.png";
 }

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:trajekita/features/authentication/screens/login/login.dart';
+import 'package:trajekita/features/authentication/screens/welcome/welcome.dart';
 
 class OnBoardingController extends GetxController {
   static OnBoardingController get instance => Get.find();
@@ -21,7 +21,7 @@ class OnBoardingController extends GetxController {
   /// Update Current Index & jump to next Page
   void nextPage() {
     if (currentPageIndex.value == 2) {
-      Get.offAll(const LoginScreen());
+      Get.offAll(const WelcomeScreen());
     } else {
       int page = currentPageIndex.value + 1;
       pageController.jumpToPage(page);

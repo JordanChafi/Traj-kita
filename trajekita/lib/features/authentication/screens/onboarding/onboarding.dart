@@ -6,7 +6,7 @@ import 'package:trajekita/features/authentication/screens/onboarding/widgets/onb
 import 'package:trajekita/utils/constants/image_strings.dart';
 import 'package:trajekita/utils/constants/text_strings.dart';
 import 'widgets/onboarding_page.dart';
-import 'widgets/onboarding_skip.dart';
+//import 'widgets/onboarding_skip.dart';
 
 class OnBoardingScreen extends StatelessWidget {
   const OnBoardingScreen({super.key});
@@ -41,12 +41,11 @@ class OnBoardingScreen extends StatelessWidget {
           ),
 
           /// Skip Button
-          const OnBoardingSkip(),
+          //const OnBoardingSkip(),
 
           /// Dot Navigation SmoothPageIndicator
           const OnBoardingDotNavigation(),
 
-          /// Circular Button
           const OnBoardingNextButton(),
         ],
       ),

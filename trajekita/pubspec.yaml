@@ -54,6 +54,9 @@ dependencies:
   location: ^5.0.0
   flutter_polyline_points: ^2.0.0
   flutter_svg_provider: ^1.0.6
+  image_picker: ^0.8.4+4
+  permission_handler: ^11.0.1
+  
 
 dev_dependencies:
   flutter_test:
@@ -79,12 +82,15 @@ flutter:
   assets:
 
     - assets/images/onboarding_img/
-    - assets/logo/
+    - assets/images/logo/
+    - #assets/images/logo/Logo.png
     - assets/
-    # - assets/videos/
-    - assets/icons/brands/
+    - assets/images/logo/social/
+    - assets/images/icons/
     - assets/images/welcome_img/
-    # - assets/images/forgot_password/
+    - assets/images/logo/social/instagram.png
+    - assets/images/logo/paymentMethod/
+    - assets/images/logo/paymentMethod/momo1.png
 
   fonts:
     - family: Poppins

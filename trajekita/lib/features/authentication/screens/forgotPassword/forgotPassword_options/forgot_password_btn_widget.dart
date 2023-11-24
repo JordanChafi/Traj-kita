@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:trajekita/utils/constants/colors.dart';
 import 'package:trajekita/utils/constants/sizes.dart';
 
 class ForgotPasswordBtnWidget extends StatelessWidget {
@@ -8,6 +9,7 @@ class ForgotPasswordBtnWidget extends StatelessWidget {
     required this.subTitle,
     required this.onTap,
     Key? key,
+    //required TextStyle titleStyle,
   }) : super(key: key);
 
   final IconData btnIcon;
@@ -22,7 +24,7 @@ class ForgotPasswordBtnWidget extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
-          color: Colors.grey.shade200,
+          color: TColors.other,
         ),
         child: Row(
           children: [
@@ -33,11 +35,11 @@ class ForgotPasswordBtnWidget extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: Theme.of(context).textTheme.headlineLarge,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 Text(
                   subTitle,
-                  style: Theme.of(context).textTheme.bodyMedium,
+                  style: Theme.of(context).textTheme.bodySmall,
                 )
               ],
             ),
