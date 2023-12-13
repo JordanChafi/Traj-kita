@@ -3,8 +3,8 @@ const paymentModel = require('../models/paymentModel');
 // Contrôleur pour créer un paiement
 exports.createPayment = async (req, res) => {
   try {
-    const { passengerId, tripId, amount, paymentStatus } = req.body;
-    await paymentModel.createPayment(passengerId, tripId, amount, paymentStatus);
+    const { userId, tripId, amount, paymentStatus } = req.body;
+    await paymentModel.createPayment(userId, tripId, amount, paymentStatus);
     res.status(200).json({ message: 'Paiement créé avec succès' });
   } catch (error) {
     console.error(error);
@@ -31,7 +31,7 @@ exports.getPaymentById = async (req, res) => {
 // Contrôleur pour récupérer tous les paiements d'un passager
 exports.getPaymentsByPassengerId = async (req, res) => {
   try {
-    const passengerId = req.params.passengerId;
+    const userId = req.params.userId;
     const payments = await paymentModel.getPaymentsByPassengerId(passengerId);
     res.status(200).json({ payments });
   } catch (error) {

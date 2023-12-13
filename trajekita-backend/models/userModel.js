@@ -37,9 +37,9 @@ exports.getUserById = async (userId) => {
 };
 
 // Fonction pour mettre à jour les informations de l'utilisateur
-exports.updateUser = async (userId, name, email, phoneNumber) => {
-  const updateQuery = 'UPDATE Users SET name = ?, email = ?, phoneNumber = ? WHERE id = ?';
-  await db.query(updateQuery, [name, email, phoneNumber, userId]);
+exports.updateUser = async (userId, fullname, lastname, email, phoneNumber) => {
+  const updateQuery = 'UPDATE Users SET fullname = ?, lastname = ?, email = ?, phoneNumber = ?, ProfilePhoto = ? WHERE id = ?';
+  await db.query(updateQuery, [fullname, lastname, email, phoneNumber, profilePhoto, userId]);
 };
 
 // Fonction pour supprimer un utilisateur

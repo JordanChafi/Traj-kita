@@ -2,15 +2,15 @@
 const db = require('../utils/db');
 
 // Fonction pour créer une réservation dans la base de données
-exports.createBooking = async (passengerId, tripId, bookingStatus, amount) => {
-  const insertBookingQuery = 'INSERT INTO Booking (PassengerID, TripID, BookingStatus, Amount) VALUES (?, ?, ?, ?)';
-  await db.query(insertBookingQuery, [passengerId, tripId, bookingStatus, amount]);
+exports.createBooking = async (tripId, bookingStatus, amount) => {
+  const insertBookingQuery = 'INSERT INTO Booking (TripID, BookingStatus, Amount) VALUES (?, ?, ?)';
+  await db.query(insertBookingQuery, [tripId, bookingStatus, amount]);
 };
 
 // Fonction pour récupérer toutes les réservations d'un passager
-exports.getBookingsByPassengerId = async (passengerId) => {
-  const getBookingsQuery = 'SELECT * FROM Booking WHERE PassengerID = ?';
-  const result = await db.query(getBookingsQuery, [passengerId]);
+exports.getBookingsByUserId = async (userId) => {
+  const getBookingsQuery = 'SELECT * FROM Booking WHERE UserID = ?';
+  const result = await db.query(getBookingsQuery, [userId]);
   return result;
 };
 

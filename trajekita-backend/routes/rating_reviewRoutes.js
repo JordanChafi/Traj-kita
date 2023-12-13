@@ -1,7 +1,7 @@
 // ratingReviewRoutes.js
 const express = require('express');
 const router = express.Router();
-const ratingReviewController = require('../controllers/ratingReviewController');
+const ratingReviewController = require('../controllers/rating_reviewController');
 
 // Créer un avis et commentaire
 router.post('/create', ratingReviewController.createRatingReview);

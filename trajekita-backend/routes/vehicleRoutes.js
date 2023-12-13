@@ -10,7 +10,7 @@ router.post('/create', vehicleController.createVehicle);
 router.get('/:vehicleId', vehicleController.getVehicleById);
 
 // Récupérer tous les véhicules d'un conducteur
-router.get('/driver/:driverId', vehicleController.getVehiclesByDriverId);
+router.get('/driver/:driverId', vehicleController.getVehiclesByUserId);
 
 // Mettre à jour les informations d'un véhicule
 router.put('/:vehicleId', vehicleController.updateVehicle);

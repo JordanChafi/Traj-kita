@@ -9,7 +9,7 @@ router.post('/create', tripController.createTrip);
 router.get('/:tripId', tripController.getTripById);
 
 // Récupérer tous les trajets d'un conducteur
-router.get('/driver/:driverId', tripController.getTripsByDriverId);
+router.get('/driver/:driverId', tripController.getTripsByUserId);
 
 // Mettre à jour les informations d'un trajet
 router.put('/:tripId', tripController.updateTrip);
@@ -18,5 +18,3 @@ router.put('/:tripId', tripController.updateTrip);
 router.delete('/:tripId', tripController.deleteTripById);
 
 module.exports = router;
-
-

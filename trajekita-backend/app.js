@@ -1,8 +1,20 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 const db = require('./utils/db');
 
+const app = express();
+
+// Middleware CORS
+app.use(cors({ origin : '*' }));
+
+app.use(express.urlencoded({extended: true}))
+
+// Middleware pour parser le corps des requêtes en JSON
+app.use(bodyParser.json());
+
+// Configurer les routes
 const userRoutes = require('./routes/userRoutes');
 const tripRoutes = require('./routes/tripRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
@@ -11,25 +23,39 @@ const trip_historyRoutes = require('./routes/trip_historyRoutes');
 const rating_reviewRoutes = require('./routes/rating_reviewRoutes');
 const addressRoutes = require('./routes/addressRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
-const app = express();
-const port = 3000;
-
-app.use(bodyParser.json());
-
-// Routes
+// Utiliser les routes
 app.use('/api/users', userRoutes);
-app.use('/api/trips', tripRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/address', addressRoutes);
-app.use('/api/booking', bookingRoutes);
-app.use('/api/tripsHistory', trip_historyRoutes);
-app.use('/api/vehicle', vehicleRoutes);
-app.use('/api/rating_review', rating_reviewRoutes);
+app.use('/trips', tripRoutes);
+app.use('/payments', paymentRoutes);
+app.use('/address', addressRoutes);
+app.use('/booking', bookingRoutes);
+app.use('/tripsHistory', trip_historyRoutes);
+app.use('/vehicle', vehicleRoutes);
+app.use('/rating_review', rating_reviewRoutes);
+app.use('/notification', notificationRoutes);
 
-app.listen(port, () => {
-  console.log(`Serveur en écoute sur le port ${port}`);
+// Lancer le serveur
+const port = process.env.PORT || 4000;
+const host ='192.168.1.9';
+// const host = "localhost";
+app.listen(port,host, () => {
+  console.log(`Serveur en cours d'exécution sur ${host}:${port}`);
 });
+
+// Gestionnaire d'erreurs global
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Erreur interne du serveur');
+});
+
+// Middleware de journalisation
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  next();
+});
+
 
 // Fermez la connexion à la base de données lors de l'arrêt de l'application
 process.on('SIGINT', () => {

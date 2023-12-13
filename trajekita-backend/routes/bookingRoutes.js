@@ -7,7 +7,7 @@ const bookingController = require('../controllers/bookingController');
 router.post('/create', bookingController.createBooking);
 
 // Récupérer toutes les réservations d'un passager
-router.get('/passenger/:passengerId', bookingController.getBookingsByPassengerId);
+router.get('/passenger/:passengerId', bookingController.getBookingsByUserId);
 
 // Récupérer toutes les réservations d'un trajet
 router.get('/trip/:tripId', bookingController.getBookingsByTripId);

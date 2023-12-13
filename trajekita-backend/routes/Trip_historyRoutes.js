@@ -7,7 +7,7 @@ const tripHistoryController = require('../controllers/trip_historyController');
 router.post('/', tripHistoryController.recordTripHistory);
 
 // Récupération de l'historique des trajets d'un passager
-router.get('/passenger/:passengerId', tripHistoryController.getTripHistoryByPassengerId);
+router.get('/passenger/:passengerId', tripHistoryController.getTripHistoryByUserId);
 
 // Récupération de l'historique des trajets par ID de trajet
 router.get('/trip/:tripId', tripHistoryController.getTripHistoryByTripId);

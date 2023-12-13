@@ -12,7 +12,8 @@ exports.registerUser = async (req, res) => {
   try {
     const { lastName, firstName, email, phone, password } = req.body;
 
-    const userExistsQuery = 'SELECT * FROM Users WHERE Email = ? OR Phone = ?';
+
+    const userExistsQuery = 'SELECT * FROM Users WHERE Email = ? OR PhoneNumber = ?';
     const existingUser = await db.query(userExistsQuery, [email, phone]);
 
     if (existingUser.length > 0) {
@@ -21,7 +22,7 @@ exports.registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const insertUserQuery = 'INSERT INTO Users (LastName, FirstName, Email, Phone, Password) VALUES (?, ?, ?, ?, ?)';
+    const insertUserQuery = 'INSERT INTO Users (LastName, FirstName, Email, PhoneNumber, Password) VALUES (?, ?, ?, ?, ?)';
     await db.query(insertUserQuery, [lastName, firstName, email, phone, hashedPassword]);
 
     res.status(200).json({ message: 'Utilisateur enregistré avec succès' });
@@ -37,9 +38,11 @@ exports.loginUser = async (req, res) => {
     const { identifier, password } = req.body;
 
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
-    const loginQuery = isEmail ? 'SELECT * FROM Users WHERE Email = ?' : 'SELECT * FROM Users WHERE Phone = ?';
+    const loginQuery = isEmail ? 'SELECT * FROM Users WHERE Email = ?' : 'SELECT * FROM Users WHERE PhoneNumber = ?';
 
-    const result = await db.query(loginQuery, [identifier]);
+    console.log(identifier)
+    const result = await db.query(loginQuery, 'johnDoe@yopmail.com');
+    console.log(result)
 
     if (result.length > 0) {
       const isPasswordValid = await bcrypt.compare(password, result[0].Password);
@@ -129,7 +132,7 @@ function generateResetCode() {
 }
 
 // Fonction pour envoyer le code de réinitialisation par e-mail
-function sendResetCodeByEmail(email, resetCode) {
+async function sendResetCodeByEmail(email, resetCode) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -153,11 +156,11 @@ function sendResetCodeByEmail(email, resetCode) {
       console.log('E-mail envoyé : ' + info.response);
       resolve(); // Résoudre la promesse en cas de succès
       try {
-        await sendResetCodeByEmail('destinataire@example.com', '12345');
-        res.status(200).json({ message: 'Code de réinitialisation du mot de passe envoyé avec succès' });
+        // await sendResetCodeByEmail('destinataire@example.com', '12345');
+        // res.status(200).json({ message: 'Code de réinitialisation du mot de passe envoyé avec succès' });
       } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Erreur lors de l\'envoi du code de réinitialisation par e-mail' });
+        reject('Erreur lors de l\'envoi du code de réinitialisation par e-mail');
       }
 
     }
@@ -211,13 +214,13 @@ exports.resetPassword = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const { name, email, phoneNumber, profilePhoto } = req.body;
+    const { fullname, lastname, email, phoneNumber, profilePhoto } = req.body;
 
     // Valider et nettoyer les données d'entrée si nécessaire
 
-    const sql = 'UPDATE Users SET name = ?, email = ?, phoneNumber = ? WHERE id = ?';
+    const sql = 'UPDATE Users SET fullname = ?, lastname = ?, email = ?, phoneNumber = ?, profilePhoto = ?, WHERE id = ?';
 
-    db.query(sql, [name, email, phoneNumber, userId], (err, result) => {
+    db.query(sql, [fullname, lastname, email, phoneNumber, profilePhoto, userId], (err, result) => {
       if (err) {
         console.error(err);
         res.status(500).json({ error: 'Erreur lors de la mise à jour des informations utilisateur' });

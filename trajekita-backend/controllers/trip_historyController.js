@@ -4,8 +4,8 @@ const tripHistoryModel = require('../models/trip_historyModel');
 // Contrôleur pour enregistrer un trajet dans l'historique
 exports.recordTripHistory = async (req, res) => {
   try {
-    const { passengerId, tripId, dateTime, cost } = req.body;
-    await tripHistoryModel.recordTripHistory(passengerId, tripId, dateTime, cost);
+    const { userId, tripId, dateTime, cost } = req.body;
+    await tripHistoryModel.recordTripHistory(userId, tripId, dateTime, cost);
     res.status(200).json({ message: 'Trajet enregistré dans l\'historique avec succès' });
   } catch (error) {
     console.error(error);
@@ -14,10 +14,10 @@ exports.recordTripHistory = async (req, res) => {
 };
 
 // Contrôleur pour récupérer l'historique des trajets d'un passager
-exports.getTripHistoryByPassengerId = async (req, res) => {
+exports.getTripHistoryByUserId = async (req, res) => {
   try {
-    const passengerId = req.params.passengerId;
-    const history = await tripHistoryModel.getTripHistoryByPassengerId(passengerId);
+    const userId = req.params.userId;
+    const history = await tripHistoryModel.getTripHistoryByUserId(userId);
     res.status(200).json({ history });
   } catch (error) {
     console.error(error);

@@ -3,8 +3,8 @@ const vehicleModel = require('../models/vehicleModel');
 // Contrôleur pour créer un nouveau véhicule
 exports.createVehicle = async (req, res) => {
   try {
-    const { driverId, make, model, color, immatNumber } = req.body;
-    await vehicleModel.createVehicle(driverId, make, model, color, immatNumber);
+    const { driverId, brand, model, color, immatNumber } = req.body;
+    await vehicleModel.createVehicle(driverId, brand, model, color, immatNumber);
     res.status(200).json({ message: 'Véhicule créé avec succès' });
   } catch (error) {
     console.error(error);
@@ -30,10 +30,10 @@ exports.getVehicleById = async (req, res) => {
 };
 
 // Contrôleur pour récupérer tous les véhicules d'un conducteur
-exports.getVehiclesByDriverId = async (req, res) => {
+exports.getVehiclesByUserId = async (req, res) => {
   try {
-    const driverId = req.params.driverId;
-    const vehicles = await vehicleModel.getVehiclesByDriverId(driverId);
+    const userId = req.params.driverId;
+    const vehicles = await vehicleModel.getVehiclesByUserId(userId);
     res.status(200).json({ vehicles });
   } catch (error) {
     console.error(error);
@@ -45,9 +45,9 @@ exports.getVehiclesByDriverId = async (req, res) => {
 exports.updateVehicle = async (req, res) => {
   try {
     const vehicleId = req.params.vehicleId;
-    const { make, model, color, immatNumber } = req.body;
+    const { brand, model, color, immatNumber } = req.body;
 
-    await vehicleModel.updateVehicle(vehicleId, make, model, color, immatNumber);
+    await vehicleModel.updateVehicle(vehicleId, brand, model, color, immatNumber);
     res.status(200).json({ message: 'Informations du véhicule mises à jour avec succès' });
   } catch (error) {
     console.error(error);

@@ -4,12 +4,12 @@ const bookingModel = require('../models/bookingModel');
 // Contrôleur pour créer une réservation
 exports.createBooking = async (req, res) => {
   try {
-    const { passengerId, tripId, amount } = req.body;
+    const { tripId, amount } = req.body;
 
     // Vous pouvez définir le statut de réservation comme "Pending" par défaut
     const bookingStatus = 'Pending';
 
-    await bookingModel.createBooking(passengerId, tripId, bookingStatus, amount);
+    await bookingModel.createBooking(tripId, bookingStatus, amount);
 
     res.status(201).json({ message: 'Réservation créée avec succès' });
   } catch (error) {
@@ -19,10 +19,10 @@ exports.createBooking = async (req, res) => {
 };
 
 // Contrôleur pour récupérer toutes les réservations d'un passager
-exports.getBookingsByPassengerId = async (req, res) => {
+exports.getBookingsByUserId = async (req, res) => {
   try {
-    const passengerId = req.params.passengerId;
-    const bookings = await bookingModel.getBookingsByPassengerId(passengerId);
+    const userId = req.params.userId;
+    const bookings = await bookingModel.getBookingsByUserId(passengerId);
 
     res.status(200).json({ bookings });
   } catch (error) {

@@ -25,7 +25,7 @@ router.put('/:userId', userController.updateUser);
 // Suppression d'un utilisateur
 router.delete('/:userId', userController.deleteUser);
 
-// Déconnexion d'un utilisateur
+// Déconnexion d'un utilisateur 
 router.post('/logout', userController.logoutUser);
 
 module.exports = router;

@@ -3,8 +3,8 @@ const tripModel = require('../models/tripModel');
 // Fonction pour créer un trajet
 exports.createTrip = async (req, res) => {
   try {
-    const { departureLocation, destinationLocation, departureDateTime, availableSeats, fare, driverId } = req.body;
-    await tripModel.createTrip(departureLocation, destinationLocation, departureDateTime, availableSeats, fare, driverId);
+    const { departureLocation, destinationLocation, departureDateTime, availableSeats, fare, userId } = req.body;
+    await tripModel.createTrip(departureLocation, destinationLocation, departureDateTime, availableSeats, fare, userId);
     res.status(201).json({ message: 'Trajet créé avec succès' });
   } catch (error) {
     console.error(error);
@@ -13,26 +13,43 @@ exports.createTrip = async (req, res) => {
 };
 
 // Fonction pour récupérer un trajet par ID
+// exports.getTripById = async (req, res) => {
+//   try {
+//     const tripId = req.params.tripId;
+//     const trip = await tripModel.getTripById(tripId);
+//     if (trip) {
+//       res.status(200).json({ trip });
+//     } else {
+//       res.status(404).json({ error: 'Trajet non trouvé' });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erreur lors de la récupération du trajet' });
+//   }
+// };
+
+// Récupérer un trajet par ID
 exports.getTripById = async (req, res) => {
   try {
     const tripId = req.params.tripId;
     const trip = await tripModel.getTripById(tripId);
-    if (trip) {
-      res.status(200).json({ trip });
-    } else {
-      res.status(404).json({ error: 'Trajet non trouvé' });
+
+    if (!trip) {
+      return res.status(404).json({ message: 'Trajet non trouvé' });
     }
+
+    res.status(200).json(trip);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la récupération du trajet' });
+    res.status(500).json({ error: 'Erreur lors de la récupération du trajet par ID' });
   }
 };
 
 // Fonction pour récupérer tous les trajets d'un conducteur
-exports.getTripsByDriverId = async (req, res) => {
-  try {
-    const driverId = req.params.driverId;
-    const trips = await tripModel.getTripsByDriverId(driverId);
+exports.getTripsByUserId = async (req, res) => {
+  try {getTripsByDriverId
+    const userId = req.params.userId;
+    const trips = await tripModel.getTripsByDriverId(userId);
     res.status(200).json({ trips });
   } catch (error) {
     console.error(error);

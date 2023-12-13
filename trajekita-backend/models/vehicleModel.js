@@ -2,9 +2,9 @@
 const db = require('../utils/db');
 
 // Fonction pour créer un véhicule dans la base de données
-exports.createVehicle = async (driverId, make, model, color, immatNumber) => {
-  const insertVehicleQuery = 'INSERT INTO Vehicle (DriverID, Make, Model, Color, ImmatNumber) VALUES (?, ?, ?, ?, ?, ?)';
-  await db.query(insertVehicleQuery, [driverId, make, model, color, immatNumber]);
+exports.createVehicle = async (userId, brand, model, color, immatNumber) => {
+  const insertVehicleQuery = 'INSERT INTO Vehicle (UserID, Brand, Model, Color, ImmatNumber) VALUES (?, ?, ?, ?, ?, ?)';
+  await db.query(insertVehicleQuery, [userId, brand, model, color, immatNumber]);
 };
 
 // Fonction pour récupérer un véhicule par ID
@@ -16,15 +16,15 @@ exports.getVehicleById = async (vehicleId) => {
 
 // Fonction pour récupérer tous les véhicules d'un conducteur
 exports.getVehiclesByDriverId = async (driverId) => {
-  const getVehiclesQuery = 'SELECT * FROM Vehicle WHERE DriverID = ?';
+  const getVehiclesQuery = 'SELECT * FROM Vehicle WHERE UserID = ?';
   const result = await db.query(getVehiclesQuery, [driverId]);
   return result;
 };
 
 // Fonction pour mettre à jour les informations d'un véhicule
-exports.updateVehicle = async (vehicleId, make, model, color, immatNumber) => {
-  const updateQuery = 'UPDATE Vehicle SET Make = ?, Model = ?, Color = ?, ImmatNumber = ? WHERE ID = ?';
-  await db.query(updateQuery, [make, model, color, immatNumber, vehicleId]);
+exports.updateVehicle = async (vehicleId, brand, model, color, immatNumber) => {
+  const updateQuery = 'UPDATE Vehicle SET Brand = ?, Model = ?, Color = ?, ImmatNumber = ? WHERE ID = ?';
+  await db.query(updateQuery, [brand, model, color, immatNumber, vehicleId]);
 };
 
 // Fonction pour supprimer un véhicule par ID

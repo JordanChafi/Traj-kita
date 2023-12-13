@@ -1,9 +1,9 @@
 const db = require('../utils/db');
 
 // Fonction pour créer un paiement dans la base de données
-exports.createPayment = async (passengerId, tripId, amount, paymentStatus) => {
-  const insertPaymentQuery = 'INSERT INTO Payment (PassengerID, TripID, Amount, PaymentStatus) VALUES (?, ?, ?, ?)';
-  await db.query(insertPaymentQuery, [passengerId, tripId, amount, paymentStatus]);
+exports.createPayment = async (userId, tripId, amount, paymentStatus) => {
+  const insertPaymentQuery = 'INSERT INTO Payment (UserID, TripID, Amount, PaymentStatus) VALUES (?, ?, ?, ?)';
+  await db.query(insertPaymentQuery, [userId, tripId, amount, paymentStatus]);
 };
 
 // Fonction pour récupérer un paiement par ID
@@ -14,8 +14,8 @@ exports.getPaymentById = async (paymentId) => {
 };
 
 // Fonction pour récupérer tous les paiements d'un passager
-exports.getPaymentsByPassengerId = async (passengerId) => {
-  const getPaymentsQuery = 'SELECT * FROM Payment WHERE PassengerID = ?';
+exports.getPaymentsByUserId = async (userId) => {
+  const getPaymentsQuery = 'SELECT * FROM Payment WHERE UserID = ?';
   const result = await db.query(getPaymentsQuery, [passengerId]);
   return result;
 };

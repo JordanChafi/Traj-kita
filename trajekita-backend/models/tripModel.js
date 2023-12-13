@@ -1,9 +1,9 @@
 const db = require('../utils/db');
 
 // Fonction pour créer un trajet dans la base de données
-exports.createTrip = async (departureLocation, destinationLocation, departureDateTime, availableSeats, fare, driverId) => {
-  const insertTripQuery = 'INSERT INTO Trip (DepartureLocation, DestinationLocation, DepartureDateTime, AvailableSeats, Fare, DriverID) VALUES (?, ?, ?, ?, ?, ?)';
-  await db.query(insertTripQuery, [departureLocation, destinationLocation, departureDateTime, availableSeats, fare, driverId]);
+exports.createTrip = async (departureLocation, destinationLocation, departureDateTime, availableSeats, fare, userId) => {
+  const insertTripQuery = 'INSERT INTO Trip (DepartureLocation, DestinationLocation, DepartureDateTime, AvailableSeats, Fare, UserID) VALUES (?, ?, ?, ?, ?, ?)';
+  await db.query(insertTripQuery, [departureLocation, destinationLocation, departureDateTime, availableSeats, fare, userId]);
 };
 
 // Fonction pour récupérer un trajet par ID
@@ -14,9 +14,9 @@ exports.getTripById = async (tripId) => {
 };
 
 // Fonction pour récupérer tous les trajets d'un conducteur
-exports.getTripsByDriverId = async (driverId) => {
-  const getTripsQuery = 'SELECT * FROM Trip WHERE DriverID = ?';
-  const result = await db.query(getTripsQuery, [driverId]);
+exports.getTripsByUserId = async (userId) => {
+  const getTripsQuery = 'SELECT * FROM Trip WHERE UserID = ?';
+  const result = await db.query(getTripsQuery, [userId]);
   return result;
 };
 
