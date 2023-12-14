@@ -1,8 +1,11 @@
 const db = require('../utils/db');
+const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const twilio = require('twilio');
+const { User } = require('../models');
+
 // const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = process.env;
 
 // const clientTwilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
@@ -13,17 +16,35 @@ exports.registerUser = async (req, res) => {
     const { lastName, firstName, email, phone, password } = req.body;
 
 
-    const userExistsQuery = 'SELECT * FROM Users WHERE Email = ? OR PhoneNumber = ?';
-    const existingUser = await db.query(userExistsQuery, [email, phone]);
+    // const userExistsQuery = 'SELECT * FROM Users WHERE Email = ? OR PhoneNumber = ?';
+    // const existingUser = await db.query(userExistsQuery, [email, phone]);
 
-    if (existingUser.length > 0) {
+    const user = await User.findOne({ where: {
+        [Op.or]: [
+          { Email: email }, 
+          {PhoneNumber: phone}
+        ]
+      }}
+    );
+
+
+    if (user != null) {
       return res.status(400).json({ error: 'L\'adresse e-mail ou le numéro de téléphone est déjà utilisé.' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const insertUserQuery = 'INSERT INTO Users (LastName, FirstName, Email, PhoneNumber, Password) VALUES (?, ?, ?, ?, ?)';
-    await db.query(insertUserQuery, [lastName, firstName, email, phone, hashedPassword]);
+    // const insertUserQuery = 'INSERT INTO Users (LastName, FirstName, Email, PhoneNumber, Password) VALUES (?, ?, ?, ?, ?)';
+    // await db.query(insertUserQuery, [lastName, firstName, email, phone, hashedPassword]);
+
+    // Enregistrement de l'utilisateur dans la base de données
+    await User.create({
+      LastName: lastName,
+      FirstName: firstName,
+      PhoneNumber: phone,
+      Email: email,
+      Password: hashedPassword,
+    });
 
     res.status(200).json({ message: 'Utilisateur enregistré avec succès' });
   } catch (error) {
@@ -38,19 +59,27 @@ exports.loginUser = async (req, res) => {
     const { identifier, password } = req.body;
 
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
-    const loginQuery = isEmail ? 'SELECT * FROM Users WHERE Email = ?' : 'SELECT * FROM Users WHERE PhoneNumber = ?';
+    
+    // Utilisation de Sequelize pour trouver l'utilisateur
+    const user = await User.findOne({ where: {
+        [Op.or]: [
+          { Email: identifier }, 
+          {PhoneNumber: identifier}
+        ]
+      }}
+    );
 
-    console.log(identifier)
-    const result = await db.query(loginQuery, 'johnDoe@yopmail.com');
-    console.log(result)
-
-    if (result.length > 0) {
-      const isPasswordValid = await bcrypt.compare(password, result[0].Password);
+    if (user) {
+      // Utilisation de bcrypt pour vérifier le mot de passe
+      const isPasswordValid = await bcrypt.compare(password, user.Password);
 
       if (isPasswordValid) {
-        const token = jwt.sign({ userId: result[0].Id }, 'votre_clé_secrète', { expiresIn: '1h' });
+        // Utilisation de jwt pour créer un token
+        const token = jwt.sign({ userId: user.Id }, 'votre_clé_secrète', { expiresIn: '1h' });
+
+        // Configuration du cookie et envoi de la réponse
         res.cookie('access_token', token, { httpOnly: true, maxAge: 3600000 });
-        res.status(200).json({ message: 'Connexion réussie', user: result[0] });
+        res.status(200).json({ message: 'Connexion réussie', user });
       } else {
         res.status(401).json({ error: 'Mot de passe incorrect' });
       }
@@ -62,6 +91,7 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ error: 'Erreur lors de la connexion de l\'utilisateur' });
   }
 };
+
 
 // Contrôleur pour récupérer un utilisateur par ID
 exports.getUserById = (req, res) => {
