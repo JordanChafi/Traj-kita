@@ -94,21 +94,27 @@ exports.loginUser = async (req, res) => {
 
 
 // Contrôleur pour récupérer un utilisateur par ID
-exports.getUserById = (req, res) => {
+exports.getUserById = async (req, res) => {
   const userId = req.params.userId;
-  const sql = 'SELECT * FROM Users WHERE id = ?';
-  db.query(sql, [userId], (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Erreur lors de la récupération de l\'utilisateur' });
-    } else {
-      if (result.length > 0) {
-        res.status(200).json({ user: result[0] });
-      } else {
-        res.status(404).json({ error: 'Utilisateur non trouvé' });
-      }
-    }
-  });
+  // const sql = 'SELECT * FROM Users WHERE id = ?';
+  const user = await User.findOne({where:{ID: userId}})
+  if (user!=null) {
+    res.status(200).json({ user: user });
+  } else {
+    res.status(400).json({ error: 'Utilisateur n\'existe pas' });
+  }
+  // db.query(sql, [userId], (err, result) => {
+  //   if (err) {
+  //     console.error(err);
+  //     res.status(500).json({ error: 'Erreur lors de la récupération de l\'utilisateur' });
+  //   } else {
+  //     if (result.length > 0) {
+  //       res.status(200).json({ user: result[0] });
+  //     } else {
+  //       res.status(404).json({ error: 'Utilisateur non trouvé' });
+  //     }
+  //   }
+  // });
 };
 
 // Contrôleur pour l'envoi du code de réinitialisation du mot de passe par e-mail ou numéro de téléphone
@@ -120,38 +126,46 @@ exports.forgotPassword = async (req, res) => {
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
     const isPhone = /^\d+$/.test(identifier);
 
-    // Utiliser l'identificateur dans la requête SQL en conséquence
-    const userQuery = isEmail
-      ? 'SELECT * FROM Users WHERE Email = ?'
-      : 'SELECT * FROM Users WHERE Phone = ?';
+    // Utiliser Sequelize pour récupérer l'utilisateur en fonction de l'identificateur
+    const user = isEmail
+      ? await User.findOne({ where: { Email: identifier } })
+      : await User.findOne({ where: { PhoneNumber: identifier } });
 
-    const result = await db.query(userQuery, [identifier]);
-
-    if (result.length > 0) {
+    if (user != null) {
       // Générer un code de réinitialisation à 5 chiffres
       const resetCode = generateResetCode();
 
       // Enregistrer le code de réinitialisation dans la base de données avec une expiration d'1 minute
-
-      const updateCodeQuery = 'UPDATE Users SET ResetCode = ?, ResetCodeExpiry = DATE_ADD(NOW(), INTERVAL 10 MINUTE) WHERE Id = ?';
-      // const updateCodeQuery = 'UPDATE Users SET ResetCode = ?, ResetCodeExpiry = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE Id = ?';
-      await db.query(updateCodeQuery, [resetCode, result[0].Id]);
+      await user.update({
+        ResetCode: resetCode,
+        ResetCodeExpiry: new Date(new Date().getTime() + 10 * 60 * 1000), // 10 minutes à partir de maintenant
+      });
 
       // Envoyer le code de réinitialisation par e-mail ou SMS en fonction de l'identificateur
       if (isEmail) {
         // Logique d'envoi par e-mail
-        sendResetCodeByEmail(result[0].Email, resetCode);
+        const emailResult = await sendResetCodeByEmail(user.Email, resetCode);
+        if (emailResult.success) {
+          res.status(200).json({ message: emailResult.message });
+        } else {
+          res.status(500).json({ error: emailResult.message });
+        }
       } else if (isPhone) {
         // Logique d'envoi par SMS
-        sendResetCodeBySMS(result[0].Phone, resetCode);
+        sendResetCodeBySMS(user.Phone, resetCode);
+      } else {
+        res.status(200).json({ message: 'Code de réinitialisation du mot de passe envoyé avec succès' });
       }
-
-      res.status(200).json({ message: 'Code de réinitialisation du mot de passe envoyé avec succès' });
     } else {
       res.status(404).json({ error: 'Utilisateur non trouvé' });
     }
   } catch (error) {
-    console.error(error);
+    console.error('Erreur dans le contrôleur forgotPassword:', error);
+
+    // Affichez les détails spécifiques de l'erreur
+    if (error.name === 'SequelizeDatabaseError') {
+      console.error('Erreur de base de données Sequelize:', error.message);
+    }
     res.status(500).json({ error: 'Erreur lors de la demande de réinitialisation du mot de passe' });
   }
 };
@@ -161,8 +175,9 @@ function generateResetCode() {
   return Math.floor(10000 + Math.random() * 90000).toString(); // Génère un code à 5 chiffres
 }
 
+
 // Fonction pour envoyer le code de réinitialisation par e-mail
-async function sendResetCodeByEmail(email, resetCode) {
+function sendResetCodeByEmail(email, resetCode) {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -178,24 +193,18 @@ async function sendResetCodeByEmail(email, resetCode) {
     text: `Votre code de réinitialisation de votre mot de passe est : ${resetCode}`,
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      reject(error); // Rejeter la promesse en cas d'erreur
-    } else {
+  // Retourne directement la promesse créée par sendMail
+  return transporter.sendMail(mailOptions)
+    .then((info) => {
       console.log('E-mail envoyé : ' + info.response);
-      resolve(); // Résoudre la promesse en cas de succès
-      try {
-        // await sendResetCodeByEmail('destinataire@example.com', '12345');
-        // res.status(200).json({ message: 'Code de réinitialisation du mot de passe envoyé avec succès' });
-      } catch (error) {
-        console.error(error);
-        reject('Erreur lors de l\'envoi du code de réinitialisation par e-mail');
-      }
-
-    }
-  });
+      return { success: true, message: 'Code de réinitialisation du mot de passe envoyé avec succès' };
+    })
+    .catch((error) => {
+      console.error(error);
+      return { success: false, message: 'Erreur lors de l\'envoi du code de réinitialisation par e-mail' };
+    });
 }
+
 
 // Fonction pour envoyer le code de réinitialisation par SMS
 async function sendResetCodeBySMS(phoneNumber, resetCode) {
@@ -220,15 +229,31 @@ exports.resetPassword = async (req, res) => {
     const { userId, newPassword, otpCode } = req.body;
 
     // Vérifier si le code OTP est valide pour l'utilisateur
-    const otpCheckQuery = 'SELECT * FROM Users WHERE Id = ? AND ResetCode = ? AND ResetCodeExpiry > NOW()';
-    const user = await db.query(otpCheckQuery, [userId, otpCode]);
+    const user = await User.findOne({
+      where: {
+        id: userId,
+        resetCode: otpCode,
+        resetCodeExpiry: { [Op.gt]: new Date() },
+      },
+    });
 
-    if (user.length === 1) {
+    if (user) {
       // Le code OTP est valide, mettez à jour le mot de passe
       const hashedPassword = await bcrypt.hash(newPassword, 10); // Hasher le nouveau mot de passe
+
       // Mettre à jour le mot de passe dans la base de données
-      const updatePasswordQuery = 'UPDATE Users SET Password = ?, ResetCode = NULL, ResetCodeExpiry = NULL WHERE Id = ?';
-      await db.query(updatePasswordQuery, [hashedPassword, userId]);
+      await User.update(
+        {
+          password: hashedPassword,
+          resetCode: null,
+          resetCodeExpiry: null,
+        },
+        {
+          where: {
+            id: userId,
+          },
+        }
+      );
 
       res.status(200).json({ message: 'Réinitialisation du mot de passe réussie' });
     } else {
@@ -241,6 +266,30 @@ exports.resetPassword = async (req, res) => {
 };
 
 // Contrôleur pour la mise à jour des informations utilisateur
+// exports.updateUser = async (req, res) => {
+//   try {
+//     const userId = req.params.userId;
+//     const { fullname, lastname, email, phoneNumber, profilePhoto } = req.body;
+
+//     // Valider et nettoyer les données d'entrée si nécessaire
+
+//     const sql = 'UPDATE Users SET fullname = ?, lastname = ?, email = ?, phoneNumber = ?, profilePhoto = ?, WHERE id = ?';
+
+//     db.query(sql, [fullname, lastname, email, phoneNumber, profilePhoto, userId], (err, result) => {
+//       if (err) {
+//         console.error(err);
+//         res.status(500).json({ error: 'Erreur lors de la mise à jour des informations utilisateur' });
+//       } else {
+//         res.status(200).json({ success: true, message: 'Informations utilisateur mises à jour avec succès' });
+//       }
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erreur inattendue lors de la mise à jour des informations utilisateur' });
+//   }
+// };
+
+// Contrôleur pour la mise à jour des informations utilisateur
 exports.updateUser = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -248,16 +297,22 @@ exports.updateUser = async (req, res) => {
 
     // Valider et nettoyer les données d'entrée si nécessaire
 
-    const sql = 'UPDATE Users SET fullname = ?, lastname = ?, email = ?, phoneNumber = ?, profilePhoto = ?, WHERE id = ?';
+    const user = await User.findByPk(userId);
 
-    db.query(sql, [fullname, lastname, email, phoneNumber, profilePhoto, userId], (err, result) => {
-      if (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Erreur lors de la mise à jour des informations utilisateur' });
-      } else {
-        res.status(200).json({ success: true, message: 'Informations utilisateur mises à jour avec succès' });
-      }
-    });
+    if (user) {
+      // Mettre à jour les informations utilisateur dans la base de données
+      await user.update({
+        fullname: fullname,
+        lastname: lastname,
+        email: email,
+        phoneNumber: phoneNumber,
+        profilePhoto: profilePhoto,
+      });
+
+      res.status(200).json({ success: true, message: 'Informations utilisateur mises à jour avec succès' });
+    } else {
+      res.status(404).json({ error: 'Utilisateur non trouvé' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur inattendue lors de la mise à jour des informations utilisateur' });
@@ -265,9 +320,23 @@ exports.updateUser = async (req, res) => {
 };
 
 // Contrôleur pour la déconnexion
+// exports.logoutUser = async (req, res) => {
+//   try {
+//     // Destruction du jeton côté client
+//     res.clearCookie('access_token');  // Assurez-vous que le nom du cookie correspond à celui que vous utilisez
+
+//     // Répondre avec succès
+//     res.status(200).json({ message: 'Déconnexion réussie' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: 'Erreur lors de la déconnexion' });
+//   }
+// };
+
+// Contrôleur pour la déconnexion
 exports.logoutUser = async (req, res) => {
   try {
-    // Destruction du jeton côté client (si vous utilisez des cookies)
+    // Destruction du jeton côté client 
     res.clearCookie('access_token');  // Assurez-vous que le nom du cookie correspond à celui que vous utilisez
 
     // Répondre avec succès
@@ -279,19 +348,83 @@ exports.logoutUser = async (req, res) => {
 };
 
 // Contrôleur pour la suppression d'un utilisateur
-exports.deleteUser = async (req, res) => {
-  const userId = req.params.userId;
-  const sql = 'DELETE FROM Users WHERE id = ?';  
+// exports.deleteUser = async (req, res) => {
+//   const userId = req.params.userId;
+//   const sql = 'DELETE FROM Users WHERE id = ?';  
   
-  db.query(sql, [userId], (err, result) => {
-    if (err) {
-      console.error(err);
-      res.status(500).json({ error: 'Erreur lors de la suppression de l\'utilisateur' });
-    } else {
+//   db.query(sql, [userId], (err, result) => {
+//     if (err) {
+//       console.error(err);
+//       res.status(500).json({ error: 'Erreur lors de la suppression de l\'utilisateur' });
+//     } else {
+//       res.status(200).json({ message: 'Utilisateur supprimé avec succès' });
+//     }
+//   });
+// };
+
+// Contrôleur pour la suppression d'un utilisateur
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Recherche de l'utilisateur à supprimer
+    const user = await User.findByPk(userId);
+
+    if (user) {
+      // Supprimer l'utilisateur de la base de données
+      await user.destroy();
+
       res.status(200).json({ message: 'Utilisateur supprimé avec succès' });
+    } else {
+      res.status(404).json({ error: 'Utilisateur non trouvé' });
     }
-  });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la suppression de l\'utilisateur' });
+  }
 };
+
+// Contrôleur pour la modification du mot de passe
+// exports.changePassword = async (req, res) => {
+//   try {
+//     const userId = req.user.userId; // Assurez-vous que vous avez le userId à partir de l'authentification
+
+//     // Récupérer les données du formulaire
+//     const { oldPassword, newPassword, confirmPassword } = req.body;
+
+//     // Vérifier si le nouveau mot de passe et la confirmation correspondent
+//     if (newPassword !== confirmPassword) {
+//       return res.status(400).json({ error: 'Le nouveau mot de passe et la confirmation ne correspondent pas.' });
+//     }
+
+//     // Récupérer le mot de passe actuel de la base de données
+//     const getCurrentPasswordQuery = 'SELECT Password FROM Users WHERE Id = ?';
+//     const result = await db.query(getCurrentPasswordQuery, [userId]);
+
+//     if (result.length > 0) {
+//       // Vérifier si l'ancien mot de passe est correct
+//       const isOldPasswordValid = await bcrypt.compare(oldPassword, result[0].Password);
+
+//       if (isOldPasswordValid) {
+//         // Hasher le nouveau mot de passe
+//         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+//         // Mettre à jour le mot de passe dans la base de données
+//         const updatePasswordQuery = 'UPDATE Users SET Password = ? WHERE Id = ?';
+//         await db.query(updatePasswordQuery, [hashedNewPassword, userId]);
+
+//         res.status(200).json({ message: 'Mot de passe modifié avec succès' });
+//       } else {
+//         res.status(401).json({ error: 'Ancien mot de passe incorrect' });
+//       }
+//     } else {
+//       res.status(404).json({ error: 'Utilisateur non trouvé' });
+//     }
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erreur lors de la modification du mot de passe' });
+//   }
+// };
 
 // Contrôleur pour la modification du mot de passe
 exports.changePassword = async (req, res) => {
@@ -306,21 +439,19 @@ exports.changePassword = async (req, res) => {
       return res.status(400).json({ error: 'Le nouveau mot de passe et la confirmation ne correspondent pas.' });
     }
 
-    // Récupérer le mot de passe actuel de la base de données
-    const getCurrentPasswordQuery = 'SELECT Password FROM Users WHERE Id = ?';
-    const result = await db.query(getCurrentPasswordQuery, [userId]);
+    // Récupérer l'utilisateur de la base de données
+    const user = await User.findByPk(userId);
 
-    if (result.length > 0) {
+    if (user) {
       // Vérifier si l'ancien mot de passe est correct
-      const isOldPasswordValid = await bcrypt.compare(oldPassword, result[0].Password);
+      const isOldPasswordValid = await bcrypt.compare(oldPassword, user.password);
 
       if (isOldPasswordValid) {
         // Hasher le nouveau mot de passe
         const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
         // Mettre à jour le mot de passe dans la base de données
-        const updatePasswordQuery = 'UPDATE Users SET Password = ? WHERE Id = ?';
-        await db.query(updatePasswordQuery, [hashedNewPassword, userId]);
+        await user.update({ password: hashedNewPassword });
 
         res.status(200).json({ message: 'Mot de passe modifié avec succès' });
       } else {
