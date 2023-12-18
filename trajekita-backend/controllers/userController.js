@@ -3,9 +3,10 @@ const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
+const cookie = require('cookie');
 const twilio = require('twilio');
 const { User } = require('../models');
-
+const createTransporter = require('../config/nodemailer');
 // const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = process.env;
 
 // const clientTwilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
@@ -57,6 +58,7 @@ exports.loginUser = async (req, res) => {
     const { identifier, password } = req.body;
 
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
+    const isPhone = /^\d+$/.test(identifier);
     
     // Utilisation de Sequelize pour trouver l'utilisateur
     const user = await User.findOne({ where: {
@@ -76,8 +78,13 @@ exports.loginUser = async (req, res) => {
         const token = jwt.sign({ userId: user.Id }, 'votre_clé_secrète', { expiresIn: '1h' });
 
         // Configuration du cookie et envoi de la réponse
-        res.cookie('access_token', token, { httpOnly: true, maxAge: 3600000 });
-        res.status(200).json({ message: 'Connexion réussie', user });
+        const cookieOptions = {
+          httpOnly: true,
+          maxAge: 3600000, // 1 heure en millisecondes
+        };
+        res.setHeader('Set-Cookie', cookie.serialize('access_token', token, cookieOptions));
+        
+        res.status(200).json({ message: 'Connexion réussie', token, user });
       } else {
         res.status(401).json({ error: 'Mot de passe incorrect' });
       }
@@ -118,44 +125,67 @@ exports.getUserById = async (req, res) => {
 // Contrôleur pour l'envoi du code de réinitialisation du mot de passe par e-mail ou numéro de téléphone
 exports.forgotPassword = async (req, res) => {
   try {
+
     const { identifier } = req.body;
 
     // Vérifier si l'identificateur est un e-mail ou un numéro de téléphone
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
     const isPhone = /^\d+$/.test(identifier);
 
-    // Utiliser Sequelize pour récupérer l'utilisateur en fonction de l'identificateur
-    const user = isEmail
-      ? await User.findOne({ where: { Email: identifier } })
-      : await User.findOne({ where: { PhoneNumber: identifier } });
 
-    if (user != null) {
-      // Générer un code de réinitialisation à 5 chiffres
-      const resetCode = generateResetCode();
-
-      // Enregistrer le code de réinitialisation dans la base de données avec une expiration d'1 minute
-      await user.update({
-        ResetCode: resetCode,
-        ResetCodeExpiry: new Date(new Date().getTime() + 2 * 60 * 1000), // 2 minutes à partir de maintenant
-      });
-
-      // Envoyer le code de réinitialisation par e-mail ou SMS en fonction de l'identificateur
-      if (isEmail) {
-        // Logique d'envoi par e-mail
-        const emailResult = await sendResetCodeByEmail(user.Email, resetCode);
-        if (emailResult.success) {
-          res.status(200).json({ message: emailResult.message });
-        } else {
-          res.status(500).json({ error: emailResult.message });
-        }
-      } else if (isPhone) {
-        // Logique d'envoi par SMS
-        sendResetCodeBySMS(user.Phone, resetCode);
-      } else {
-        res.status(200).json({ message: 'Code de réinitialisation du mot de passe envoyé avec succès' });
+    const user =  await User.findOne({
+      where:{
+        [Op.or]:[
+          {
+            Email: identifier
+          },
+          {
+            PhoneNumber: identifier
+          }
+        ]
+        
       }
+    })
+
+    if(!user){
+      return res.json({message: "Utilisateur non trouvé"})
+    }
+
+
+    const reset_code = generateResetCode();
+    const date_code = new Date(new Date().getTime() + 2 * 60*1000)
+    
+    const result = await User.update(
+      {
+        ResetCode: reset_code,
+        ResetCodeExpiry: date_code,
+      },
+      {
+        where: {
+          id: user.ID,
+        },
+      }
+    );
+
+    if (result) {
+
+      if (isEmail) {
+
+        // Logique d'envoi par e-mail
+        const sender = sendResetCodeByEmail(identifier, user.ResetCode);
+
+        if (sender) {
+          res.status(201).json({message: "Email envoyé avec succès"})
+        } else {
+          res.status(400).json({message: "Erreur lors de l'envoie du mail"})
+        }
+      }else {
+        // Logique d'envoi par SMS
+        sendResetCodeBySMS(user.PhoneNumber, reset_code);
+      } 
+
     } else {
-      res.status(404).json({ error: 'Utilisateur non trouvé' });
+      res.status(403).json({error: "Erreur d'enregistrement des données"})
     }
   } catch (error) {
     console.error('Erreur dans le contrôleur forgotPassword:', error);
@@ -175,32 +205,24 @@ function generateResetCode() {
 
 
 // Fonction pour envoyer le code de réinitialisation par e-mail
-function sendResetCodeByEmail(email, resetCode) {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_PASS,
-    },
-  });
+async function sendResetCodeByEmail(email, resetCode) {
 
-  const mailOptions = {
-    from: process.env.GMAIL_USER,
+  const optionsEmail = {
+    from: 'parfaitkouamemks@gmail.com',
     to: email,
-    subject: 'Code de réinitialisation de votre mot de passe',
-    text: `Votre code de réinitialisation de votre mot de passe est : ${resetCode}`,
+    subject: "Reinitialisation Mot de passe",
+    text: "Veuillez reinitialiser votre compte avec ce code : "+resetCode,
   };
 
-  // Retourne directement la promesse créée par sendMail
-  return transporter.sendMail(mailOptions)
-    .then((info) => {
-      console.log('E-mail envoyé : ' + info.response);
-      return { success: true, message: 'Code de réinitialisation du mot de passe envoyé avec succès' };
-    })
-    .catch((error) => {
-      console.error(error);
-      return { success: false, message: 'Erreur lors de l\'envoi du code de réinitialisation par e-mail' };
-    });
+
+  try {
+    const transporter = await createTransporter();
+    await transporter.sendMail(optionsEmail);
+    return true
+  } catch (erreur) {
+    console.error('Erreur lors de l\'envoi de l\'e-mail :', erreur);
+    return false
+  }
 }
 
 
@@ -303,10 +325,10 @@ exports.updateUser = async (req, res) => {
 exports.logoutUser = async (req, res) => {
   try {
     // Destruction du jeton côté client 
-    res.clearCookie('access_token');  // Assurez-vous que le nom du cookie correspond à celui que vous utilisez
+    res.setHeader('Set-Cookie', cookie.serialize('access_token', '', { expires: new Date(0) }));
 
     // Répondre avec succès
-    res.status(200).json({ message: 'Déconnexion réussie' });
+    res.status(204).json({ message: 'Déconnexion réussie' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Erreur lors de la déconnexion' });
