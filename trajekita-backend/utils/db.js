@@ -1,5 +1,5 @@
 // utils/db.js
-const mysql = require('mysql2');
+const mysql = require('mysql');
 
 // Créer une connexion à la base de données
 const db = mysql.createConnection({

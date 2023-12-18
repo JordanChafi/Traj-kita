@@ -1,7 +1,7 @@
 const db = require('../utils/db');
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
+const createTransporter = require('../config/nodemailer');
 const jwt = require('jsonwebtoken');
 const twilio = require('twilio');
 const { User } = require('../models');
@@ -114,41 +114,68 @@ exports.getUserById = (req, res) => {
 // Contrôleur pour l'envoi du code de réinitialisation du mot de passe par e-mail ou numéro de téléphone
 exports.forgotPassword = async (req, res) => {
   try {
+
     const { identifier } = req.body;
 
     // Vérifier si l'identificateur est un e-mail ou un numéro de téléphone
     const isEmail = /\S+@\S+\.\S+/.test(identifier);
     const isPhone = /^\d+$/.test(identifier);
 
-    // Utiliser l'identificateur dans la requête SQL en conséquence
-    const userQuery = isEmail
-      ? 'SELECT * FROM Users WHERE Email = ?'
-      : 'SELECT * FROM Users WHERE Phone = ?';
 
-    const result = await db.query(userQuery, [identifier]);
+    const user =  await User.findOne({
+      where:{
+        [Op.or]:[
+          {
+            Email: identifier
+          },
+          {
+            PhoneNumber: identifier
+          }
+        ]
+        
+      }
+    })
 
-    if (result.length > 0) {
-      // Générer un code de réinitialisation à 5 chiffres
-      const resetCode = generateResetCode();
+    if(!user){
+      return res.json({message: "Utilisateur non trouvé"})
+    }
 
-      // Enregistrer le code de réinitialisation dans la base de données avec une expiration d'1 minute
 
-      const updateCodeQuery = 'UPDATE Users SET ResetCode = ?, ResetCodeExpiry = DATE_ADD(NOW(), INTERVAL 10 MINUTE) WHERE Id = ?';
-      // const updateCodeQuery = 'UPDATE Users SET ResetCode = ?, ResetCodeExpiry = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE Id = ?';
-      await db.query(updateCodeQuery, [resetCode, result[0].Id]);
+    const reset_code = generateResetCode();
+    const date_code = new Date(new Date().getTime() + 2 * 60*1000)
+    
+    const result = await User.update(
+      {
+        ResetCode: reset_code,
+        ResetCodeExpiry: date_code,
+      },
+      {
+        where: {
+          id: user.ID,
+        },
+      }
+    );
 
-      // Envoyer le code de réinitialisation par e-mail ou SMS en fonction de l'identificateur
+    if (result) {
+
       if (isEmail) {
+
         // Logique d'envoi par e-mail
-        sendResetCodeByEmail(result[0].Email, resetCode);
-      } else if (isPhone) {
+        const sender = sendResetCodeByEmail(identifier, user.ResetCode);
+
+        if (sender) {
+          res.status(201).json({message: "Email envoyé avec succès"})
+          
+        } else {
+          res.status(400).json({message: "Erreur lors de l'envoie du mail"})
+        }
+      }else {
         // Logique d'envoi par SMS
         sendResetCodeBySMS(result[0].Phone, resetCode);
       }
 
-      res.status(200).json({ message: 'Code de réinitialisation du mot de passe envoyé avec succès' });
     } else {
-      res.status(404).json({ error: 'Utilisateur non trouvé' });
+      res.json({error: "Erreur d'enregistrement des données"})
     }
   } catch (error) {
     console.error(error);
@@ -163,38 +190,23 @@ function generateResetCode() {
 
 // Fonction pour envoyer le code de réinitialisation par e-mail
 async function sendResetCodeByEmail(email, resetCode) {
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.GMAIL_USER,
-      pass: process.env.GMAIL_PASS,
-    },
-  });
 
-  const mailOptions = {
-    from: process.env.GMAIL_USER,
+  const optionsEmail = {
+    from: 'parfaitkouamemks@gmail.com',
     to: email,
-    subject: 'Code de réinitialisation de votre mot de passe',
-    text: `Votre code de réinitialisation de votre mot de passe est : ${resetCode}`,
+    subject: "Reinitialisation Mot de passe",
+    text: "Veuillez reinitialiser votre compte avec ce code : "+resetCode,
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error(error);
-      reject(error); // Rejeter la promesse en cas d'erreur
-    } else {
-      console.log('E-mail envoyé : ' + info.response);
-      resolve(); // Résoudre la promesse en cas de succès
-      try {
-        // await sendResetCodeByEmail('destinataire@example.com', '12345');
-        // res.status(200).json({ message: 'Code de réinitialisation du mot de passe envoyé avec succès' });
-      } catch (error) {
-        console.error(error);
-        reject('Erreur lors de l\'envoi du code de réinitialisation par e-mail');
-      }
 
-    }
-  });
+  try {
+    const transporter = await createTransporter();
+    await transporter.sendMail(optionsEmail);
+    return true
+  } catch (erreur) {
+    console.error('Erreur lors de l\'envoi de l\'e-mail :', erreur);
+    return false
+  }
 }
 
 // Fonction pour envoyer le code de réinitialisation par SMS

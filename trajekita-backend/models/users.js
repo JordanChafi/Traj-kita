@@ -31,18 +31,18 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(200),
       allowNull: true
     },
-    // ResetCode: {
-    //   type: DataTypes.STRING(255),
-    //   allowNull: true
-    // },
-    // ResetCodeExpiry: {
-    //   type: DataTypes.DATE,
-    //   allowNull: true
-    // },
-    // ProfilePhoto: {
-    //   type: DataTypes.STRING(255),
-    //   allowNull: true
-    // }
+    ResetCode: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    },
+    ResetCodeExpiry: {
+      type: DataTypes.DATE,
+      allowNull: true
+    },
+    ProfilePhoto: {
+      type: DataTypes.STRING(255),
+      allowNull: true
+    }
   }, {
     sequelize,
     tableName: 'User',
