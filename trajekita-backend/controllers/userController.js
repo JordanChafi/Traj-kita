@@ -13,8 +13,7 @@ const { User } = require('../models');
 // Contrôleur pour l'inscription de l'utilisateur
 exports.registerUser = async (req, res) => {
   try {
-    const { lastName, firstName, email, phone, password } = req.body;
-
+    const { firstName, lastName, email, phoneNumber, password } = req.body;
 
     // const userExistsQuery = 'SELECT * FROM Users WHERE Email = ? OR PhoneNumber = ?';
     // const existingUser = await db.query(userExistsQuery, [email, phone]);
@@ -22,11 +21,10 @@ exports.registerUser = async (req, res) => {
     const user = await User.findOne({ where: {
         [Op.or]: [
           { Email: email }, 
-          {PhoneNumber: phone}
+          { PhoneNumber: phoneNumber}
         ]
       }}
     );
-
 
     if (user != null) {
       return res.status(400).json({ error: 'L\'adresse e-mail ou le numéro de téléphone est déjà utilisé.' });
@@ -39,9 +37,9 @@ exports.registerUser = async (req, res) => {
 
     // Enregistrement de l'utilisateur dans la base de données
     await User.create({
-      LastName: lastName,
       FirstName: firstName,
-      PhoneNumber: phone,
+      LastName: lastName,
+      PhoneNumber: phoneNumber,
       Email: email,
       Password: hashedPassword,
     });
@@ -138,7 +136,7 @@ exports.forgotPassword = async (req, res) => {
       // Enregistrer le code de réinitialisation dans la base de données avec une expiration d'1 minute
       await user.update({
         ResetCode: resetCode,
-        ResetCodeExpiry: new Date(new Date().getTime() + 10 * 60 * 1000), // 10 minutes à partir de maintenant
+        ResetCodeExpiry: new Date(new Date().getTime() + 2 * 60 * 1000), // 2 minutes à partir de maintenant
       });
 
       // Envoyer le code de réinitialisation par e-mail ou SMS en fonction de l'identificateur
@@ -242,7 +240,7 @@ exports.resetPassword = async (req, res) => {
       const hashedPassword = await bcrypt.hash(newPassword, 10); // Hasher le nouveau mot de passe
 
       // Mettre à jour le mot de passe dans la base de données
-      await User.update(
+      await user.update(
         {
           password: hashedPassword,
           resetCode: null,
@@ -265,49 +263,31 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-// Contrôleur pour la mise à jour des informations utilisateur
-// exports.updateUser = async (req, res) => {
-//   try {
-//     const userId = req.params.userId;
-//     const { fullname, lastname, email, phoneNumber, profilePhoto } = req.body;
 
-//     // Valider et nettoyer les données d'entrée si nécessaire
-
-//     const sql = 'UPDATE Users SET fullname = ?, lastname = ?, email = ?, phoneNumber = ?, profilePhoto = ?, WHERE id = ?';
-
-//     db.query(sql, [fullname, lastname, email, phoneNumber, profilePhoto, userId], (err, result) => {
-//       if (err) {
-//         console.error(err);
-//         res.status(500).json({ error: 'Erreur lors de la mise à jour des informations utilisateur' });
-//       } else {
-//         res.status(200).json({ success: true, message: 'Informations utilisateur mises à jour avec succès' });
-//       }
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: 'Erreur inattendue lors de la mise à jour des informations utilisateur' });
-//   }
-// };
 
 // Contrôleur pour la mise à jour des informations utilisateur
 exports.updateUser = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const { fullname, lastname, email, phoneNumber, profilePhoto } = req.body;
+    const { firstName, lastName, email, phoneNumber, profilePhoto } = req.body;
 
     // Valider et nettoyer les données d'entrée si nécessaire
 
     const user = await User.findByPk(userId);
 
+    console.log(user)  
+
     if (user) {
       // Mettre à jour les informations utilisateur dans la base de données
-      await user.update({
-        fullname: fullname,
-        lastname: lastname,
-        email: email,
-        phoneNumber: phoneNumber,
-        profilePhoto: profilePhoto,
+      const result = await user.update({
+        FirstName: firstName,
+        LastName: lastName,
+        Email: email,
+        PhoneNumber: phoneNumber,
+        ProfilePhoto: profilePhoto
       });
+
+      console.log(result)
 
       res.status(200).json({ success: true, message: 'Informations utilisateur mises à jour avec succès' });
     } else {
@@ -318,20 +298,6 @@ exports.updateUser = async (req, res) => {
     res.status(500).json({ error: 'Erreur inattendue lors de la mise à jour des informations utilisateur' });
   }
 };
-
-// Contrôleur pour la déconnexion
-// exports.logoutUser = async (req, res) => {
-//   try {
-//     // Destruction du jeton côté client
-//     res.clearCookie('access_token');  // Assurez-vous que le nom du cookie correspond à celui que vous utilisez
-
-//     // Répondre avec succès
-//     res.status(200).json({ message: 'Déconnexion réussie' });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: 'Erreur lors de la déconnexion' });
-//   }
-// };
 
 // Contrôleur pour la déconnexion
 exports.logoutUser = async (req, res) => {
@@ -346,21 +312,6 @@ exports.logoutUser = async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la déconnexion' });
   }
 };
-
-// Contrôleur pour la suppression d'un utilisateur
-// exports.deleteUser = async (req, res) => {
-//   const userId = req.params.userId;
-//   const sql = 'DELETE FROM Users WHERE id = ?';  
-  
-//   db.query(sql, [userId], (err, result) => {
-//     if (err) {
-//       console.error(err);
-//       res.status(500).json({ error: 'Erreur lors de la suppression de l\'utilisateur' });
-//     } else {
-//       res.status(200).json({ message: 'Utilisateur supprimé avec succès' });
-//     }
-//   });
-// };
 
 // Contrôleur pour la suppression d'un utilisateur
 exports.deleteUser = async (req, res) => {
@@ -466,3 +417,49 @@ exports.changePassword = async (req, res) => {
   }
 };
 
+
+// Contrôleur pour la réinitialisation du mot de passe
+exports.resetPassword = async (req, res) => {
+  try {
+    const { userId, newPassword, otpCode } = req.body;
+
+    // Vérifier l'existence de l'utilisateur
+    const user = await User.findOne({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({ error: 'Utilisateur non trouvé' });
+    } else {
+      if (user.ResetCode !== otpCode) {
+        res.status(400).json({ error: 'Code OTP incorrect' });
+      } else if (user.ResetCodeExpiry <= new Date()) {
+        res.status(400).json({ error: 'Code OTP invalide ou expiré' });
+      } else {
+        // Le code OTP est valide, mettez à jour le mot de passe
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+        // Mettre à jour le mot de passe dans la base de données
+        await user.update(
+          {
+            password: hashedPassword,
+            resetCode: null,
+            resetCodeExpiry: null,
+          },
+          {
+            where: {
+              id: userId,
+            },
+          }
+        );
+
+        res.status(200).json({ message: 'Réinitialisation du mot de passe réussie' });
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erreur lors de la réinitialisation du mot de passe' });
+  }
+};
