@@ -285,8 +285,6 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-
-
 // Contrôleur pour la mise à jour des informations utilisateur
 exports.updateUser = async (req, res) => {
   try {
