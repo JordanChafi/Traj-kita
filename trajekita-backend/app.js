@@ -39,7 +39,7 @@ app.use('/api/vehicule', vehiculeRoutes);
 
 // Lancer le serveur
 const port = process.env.PORT || 4000;
-const host ='192.168.1.23';
+const host ='192.168.1.6';
 // const host = "localhost";
 
 sequelize.sync().then(() => {

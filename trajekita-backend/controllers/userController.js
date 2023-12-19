@@ -1,12 +1,11 @@
 const db = require('../utils/db');
 const { Op } = require('sequelize');
 const bcrypt = require('bcrypt');
-const nodemailer = require('nodemailer');
+const createTransporter = require('../config/nodemailer');
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 const twilio = require('twilio');
 const { User } = require('../models');
-const createTransporter = require('../config/nodemailer');
 // const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = process.env;
 
 // const clientTwilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
@@ -174,7 +173,7 @@ exports.forgotPassword = async (req, res) => {
       if (isEmail) {
 
         // Logique d'envoi par e-mail
-        const sender = sendResetCodeByEmail(identifier, user.ResetCode);
+        const sender = sendResetCodeByEmail(identifier, reset_code);
 
         if (sender) {
           res.status(201).json({message: "Email envoyé avec succès"})
@@ -250,33 +249,34 @@ exports.resetPassword = async (req, res) => {
   try {
   const { userId, newPassword, otpCode } = req.body;
 
-  // Vérifier si l'utilisateur existe en bd
-  const user = await User.findOne({
-    where: {
-      ID: userId,
-    },
-  });
-
-  if(user){
-     // Vérifier si le code otp existe en bd
-    const otpExist = await User.findOne({
+    // Vérifier si l'utilisateur existe en bd
+    const user = await User.findOne({
       where: {
-        ResetCode: otpCode,
+        ID: userId,
       },
     });
 
-    if (otpExist) {
-       // Vérifier si le code otp a expiré
-      const otpExpiry = await User.findOne({
+    if(user){
+       // Vérifier si le code otp existe en bd
+      const otpExist = await User.findOne({
         where: {
-          ResetCodeExpiry: { [Op.lt]: new Date() },
+          ResetCode: otpCode,
         },
       });
 
-      if (!otpExpiry) {
+      if (otpExist) {
+         // Vérifier si le code otp a expiré
+        const otpExpiry = await User.findOne({
+          where: {
+            ResetCodeExpiry: { [Op.lt]: new Date() },
+          },
+        });
 
-        // Le code OTP est valide, mettez à jour le mot de passe
-        const hashedPassword = await bcrypt.hash(newPassword, 10); // Hasher le nouveau mot de passe
+        if (!otpExpiry) {
+
+          // Le code OTP est valide, mettez à jour le mot de passe
+          const hashedPassword = await bcrypt.hash(newPassword, 10); // Hasher le nouveau mot de passe
+
 
           // Mettre à jour le mot de passe dans la base de données
           await user.update(
