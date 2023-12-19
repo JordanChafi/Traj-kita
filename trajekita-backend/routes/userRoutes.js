@@ -14,7 +14,7 @@ router.post('/login', userController.loginUser);
 router.post('/forgot-password', userController.forgotPassword);
 
 // Réinitialisation du mot de passe avec le jeton
-router.post('/reset-password/:token', userController.resetPassword);
+router.post('/reset-password', userController.resetPassword);
 
 // Récupération d'un utilisateur par ID
 router.get('/:userId', userController.getUserById);
