@@ -154,6 +154,8 @@ exports.forgotPassword = async (req, res) => {
 
     const reset_code = generateResetCode();
     const date_code = new Date(new Date().getTime() + 2 * 60*1000)
+
+    console.log(date_code)
     
     const result = await User.update(
       {
@@ -246,38 +248,54 @@ async function sendResetCodeBySMS(phoneNumber, resetCode) {
 // Contrôleur pour la réinitialisation du mot de passe
 exports.resetPassword = async (req, res) => {
   try {
-    const { userId, newPassword, otpCode } = req.body;
+  const { userId, newPassword, otpCode } = req.body;
 
-    // Vérifier si le code OTP est valide pour l'utilisateur
-    const user = await User.findOne({
+  // Vérifier si l'utilisateur existe en bd
+  const user = await User.findOne({
+    where: {
+      ID: userId,
+    },
+  });
+
+  if(user){
+     // Vérifier si le code otp existe en bd
+    const otpExist = await User.findOne({
       where: {
-        id: userId,
-        resetCode: otpCode,
-        resetCodeExpiry: { [Op.gt]: new Date() },
+        ResetCode: otpCode,
       },
     });
 
-    if (user) {
-      // Le code OTP est valide, mettez à jour le mot de passe
-      const hashedPassword = await bcrypt.hash(newPassword, 10); // Hasher le nouveau mot de passe
-
-      // Mettre à jour le mot de passe dans la base de données
-      await user.update(
-        {
-          password: hashedPassword,
-          resetCode: null,
-          resetCodeExpiry: null,
+    if (otpExist) {
+       // Vérifier si le code otp a expiré
+      const otpExpiry = await User.findOne({
+        where: {
+          ResetCodeExpiry: { [Op.lt]: new Date() },
         },
-        {
-          where: {
-            id: userId,
-          },
-        }
-      );
+      });
 
-      res.status(200).json({ message: 'Réinitialisation du mot de passe réussie' });
-    } else {
-      res.status(401).json({ error: 'Code OTP invalide ou expiré' });
+      if (!otpExpiry) {
+
+        // Le code OTP est valide, mettez à jour le mot de passe
+        const hashedPassword = await bcrypt.hash(newPassword, 10); // Hasher le nouveau mot de passe
+
+          // Mettre à jour le mot de passe dans la base de données
+          await user.update(
+            {
+              Password: hashedPassword,
+            },
+          );
+
+          res.status(200).json({ message: 'Réinitialisation du mot de passe réussie' });
+
+        } else {
+          res.status(400).json({message: "Code OTP expiré"})
+        }
+      } else {
+        res.status(404).json({message:"Code OTP invalide"})
+      }
+
+    }else{
+      res.status(404).json({message: "Utilisateur non trouvé"})
     }
   } catch (error) {
     console.error(error);

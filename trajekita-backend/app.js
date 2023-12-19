@@ -19,7 +19,7 @@ app.use(bodyParser.json());
 const userRoutes = require('./routes/userRoutes');
 // const tripRoutes = require('./routes/tripRoutes');
 // const paymentRoutes = require('./routes/paymentRoutes');
-const vehicleRoutes = require('./routes/vehicleRoutes');
+const vehiculeRoutes = require('./routes/vehiculeRoutes');
 // const trip_historyRoutes = require('./routes/Trip_historyRoutes');
 // const rating_reviewRoutes = require('./routes/rating_reviewRoutes');
 // const addressRoutes = require('./routes/addressRoutes');
@@ -33,13 +33,13 @@ app.use('/api/users', userRoutes);
 // app.use('/address', addressRoutes);
 // app.use('/booking', bookingRoutes);
 // app.use('/tripsHistory', trip_historyRoutes);
-app.use('/vehicle', vehicleRoutes);
+app.use('/api/vehicule', vehiculeRoutes);
 // app.use('/rating_review', rating_reviewRoutes);
 // app.use('/notification', notificationRoutes);
 
 // Lancer le serveur
 const port = process.env.PORT || 4000;
-const host ='192.168.1.6';
+const host ='192.168.1.23';
 // const host = "localhost";
 
 sequelize.sync().then(() => {

@@ -1,21 +1,21 @@
 // vehicleRoutes.js
 const express = require('express');
 const router = express.Router();
-const vehicleController = require('../controllers/vehicleController');
+const vehiculeController = require('../controllers/vehiculeController');
 
 // Créer un nouveau véhicule
-router.post('/create', vehicleController.createVehicle);
+router.post('/create', vehiculeController.createVehicule);
 
 // Récupérer un véhicule par ID
-router.get('/:vehicleId', vehicleController.getVehicleById);
+router.get('/:vehiculeId', vehiculeController.getVehiculeById);
 
 // Récupérer tous les véhicules d'un conducteur
-router.get('/driver/:driverId', vehicleController.getVehiclesByUserId);
+router.get('/driver/:driverId', vehiculeController.getVehiculesByUserId);
 
 // Mettre à jour les informations d'un véhicule
-router.put('/:vehicleId', vehicleController.updateVehicle);
+router.put('/:vehiculeId', vehiculeController.updateVehicule);
 
 // Supprimer un véhicule par ID
-router.delete('/:vehicleId', vehicleController.deleteVehicleById);
+router.delete('/:vehiculeId', vehiculeController.deleteVehiculeById);
 
 module.exports = router;

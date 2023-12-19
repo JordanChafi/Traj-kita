@@ -1,7 +1,7 @@
-// const { DataTypes , Sequelize} = require('sequelize');
+const { DataTypes } = require('sequelize');
 // const sequelize = require('../config/connexion_db'); 
 
-module.exports = function (sequelize, DataTypes) {
+module.exports = function (sequelize) {
   const User =  sequelize.define('User', {
     ID: {
       autoIncrement: true,
@@ -43,37 +43,47 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.STRING(255),
       allowNull: true
     }
-  }, {
-    sequelize,
-    tableName: 'User',
-    timestamps: false,
-    indexes: [
-      {
-        name: "PRIMARY",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "ID" },
-        ]
-      },
-      {
-        name: "Email",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "Email" },
-        ]
-      },
-      {
-        name: "PhoneNumber",
-        unique: true,
-        using: "BTREE",
-        fields: [
-          { name: "PhoneNumber" },
-        ]
-      },
-    ]
-  });
+  }, 
+  
+  // {
+  //   sequelize,
+  //   tableName: 'User',
+  //   timestamps: false,
+  //   indexes: [
+  //     {
+  //       name: "PRIMARY",
+  //       unique: true,
+  //       using: "BTREE",
+  //       fields: [
+  //         { name: "ID" },
+  //       ]
+  //     },
+  //     {
+  //       name: "Email",
+  //       unique: true,
+  //       using: "BTREE",
+  //       fields: [
+  //         { name: "Email" },
+  //       ]
+  //     },
+  //     {
+  //       name: "PhoneNumber",
+  //       unique: true,
+  //       using: "BTREE",
+  //       fields: [
+  //         { name: "PhoneNumber" },
+  //       ]
+  //     },
+  //   ]
+  // }
+);
+
+  User.associate = (models) => {
+    User.hasMany(models.Vehicule, {
+      foreignKey: 'userId',
+      as: 'vehicule',
+    });
+  };
 
   return User
 };
