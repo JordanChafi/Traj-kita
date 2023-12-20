@@ -13,7 +13,7 @@ const { User } = require('../models');
 // Contrôleur pour l'inscription de l'utilisateur
 exports.registerUser = async (req, res) => {
   try {
-    const { firstName, lastName, email, phoneNumber, password } = req.body;
+    const { firstName, lastName, email, phone, password } = req.body;
 
     // const userExistsQuery = 'SELECT * FROM Users WHERE Email = ? OR PhoneNumber = ?';
     // const existingUser = await db.query(userExistsQuery, [email, phone]);
@@ -21,7 +21,7 @@ exports.registerUser = async (req, res) => {
     const user = await User.findOne({ where: {
         [Op.or]: [
           { Email: email }, 
-          { PhoneNumber: phoneNumber}
+          { PhoneNumber: phone}
         ]
       }}
     );
@@ -39,7 +39,7 @@ exports.registerUser = async (req, res) => {
     await User.create({
       FirstName: firstName,
       LastName: lastName,
-      PhoneNumber: phoneNumber,
+      PhoneNumber: phone,
       Email: email,
       Password: hashedPassword,
     });
@@ -312,8 +312,6 @@ exports.updateUser = async (req, res) => {
     // Valider et nettoyer les données d'entrée si nécessaire
 
     const user = await User.findByPk(userId);
-
-    console.log(user)  
 
     if (user) {
       // Mettre à jour les informations utilisateur dans la base de données

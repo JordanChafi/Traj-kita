@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 
 // Configurer les routes
 const userRoutes = require('./routes/userRoutes');
-// const tripRoutes = require('./routes/tripRoutes');
+const tripRoutes = require('./routes/tripRoutes');
 // const paymentRoutes = require('./routes/paymentRoutes');
 const vehiculeRoutes = require('./routes/vehiculeRoutes');
 // const trip_historyRoutes = require('./routes/Trip_historyRoutes');
@@ -28,7 +28,7 @@ const vehiculeRoutes = require('./routes/vehiculeRoutes');
 
 // Utiliser les routes
 app.use('/api/users', userRoutes);
-// app.use('/trips', tripRoutes);
+app.use('/trips', tripRoutes);
 // app.use('/payments', paymentRoutes);
 // app.use('/address', addressRoutes);
 // app.use('/booking', bookingRoutes);
@@ -39,7 +39,7 @@ app.use('/api/vehicule', vehiculeRoutes);
 
 // Lancer le serveur
 const port = process.env.PORT || 4000;
-const host ='192.168.1.6';
+const host ='192.168.1.23';
 // const host = "localhost";
 
 sequelize.sync().then(() => {

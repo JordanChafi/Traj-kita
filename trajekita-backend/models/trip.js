@@ -1,18 +1,27 @@
-const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('trip', {
+const {DataTypes} = require('sequelize');
+
+module.exports = function(sequelize) {
+  const Trip = sequelize.define('Trip', {
     ID: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
     },
-    DepartureLocation: {
-      type: DataTypes.STRING(255),
+    DepartureLocationLong: {
+      type: DataTypes.DOUBLE,
       allowNull: true
     },
-    DestinationLocation: {
-      type: DataTypes.STRING(255),
+    DepartureLocationLat: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
+    DestinationLocationLong: {
+      type: DataTypes.DOUBLE,
+      allowNull: true
+    },
+    DestinationLocationLat: {
+      type: DataTypes.DOUBLE,
       allowNull: true
     },
     DepartureDateTime: {
@@ -37,7 +46,7 @@ module.exports = function(sequelize, DataTypes) {
     }
   }, {
     sequelize,
-    tableName: 'trip',
+    tableName: 'Trip',
     timestamps: false,
     indexes: [
       {
@@ -64,4 +73,6 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
+
+  return Trip
 };
