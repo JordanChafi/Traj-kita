@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
+
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('triphistory', {
+  const TripHistory = sequelize.define('triphistory', {
     ID: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -16,7 +17,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    sequelize,
     tableName: 'triphistory',
     timestamps: false,
     indexes: [
@@ -37,4 +37,6 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
+
+  return TripHistory;
 };

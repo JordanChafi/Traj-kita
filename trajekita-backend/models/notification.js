@@ -1,7 +1,7 @@
-const Sequelize = require('sequelize');
+const { DataTypes } = require('sequelize');
 
-module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('notification', {
+module.exports = (sequelize) => {
+  const Notification = sequelize.define('notification', {
     ID: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -17,29 +17,30 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     NotificationStatus: {
-      type: DataTypes.ENUM('Unread','Read'),
+      type: DataTypes.ENUM('Unread', 'Read'),
       allowNull: true
     }
   }, {
-    sequelize,
     tableName: 'notification',
     timestamps: false,
     indexes: [
       {
-        name: "PRIMARY",
+        name: 'PRIMARY',
         unique: true,
-        using: "BTREE",
+        using: 'BTREE',
         fields: [
-          { name: "ID" },
+          { name: 'ID' },
         ]
       },
       {
-        name: "UserID",
-        using: "BTREE",
+        name: 'UserID',
+        using: 'BTREE',
         fields: [
-          { name: "UserID" },
+          { name: 'UserID' },
         ]
       },
     ]
   });
+
+  return Notification;
 };

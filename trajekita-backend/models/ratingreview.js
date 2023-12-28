@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
+
 module.exports = function(sequelize, DataTypes) {
-  return sequelize.define('ratingreview', {
+  const RatingReview = sequelize.define('ratingreview', {
     ID: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -24,7 +25,6 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     }
   }, {
-    sequelize,
     tableName: 'ratingreview',
     timestamps: false,
     indexes: [
@@ -52,4 +52,6 @@ module.exports = function(sequelize, DataTypes) {
       },
     ]
   });
+
+  return RatingReview;
 };
