@@ -9,7 +9,12 @@ exports.createBooking = async (req, res) => {
     // Vous pouvez définir le statut de réservation comme "Pending" par défaut
     const bookingStatus = 'Pending';
 
-    await bookingModel.createBooking(tripId, bookingStatus, amount);
+    // await bookingModel.createBooking(tripId, bookingStatus, amount);
+    await Booking.create({
+      TripId: tripId,
+      Status: bookingStatus,
+      Amount: amount,
+    });
 
     res.status(201).json({ message: 'Réservation créée avec succès' });
   } catch (error) {
@@ -22,7 +27,11 @@ exports.createBooking = async (req, res) => {
 exports.getBookingsByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const bookings = await bookingModel.getBookingsByUserId(passengerId);
+    // const bookings = await bookingModel.getBookingsByUserId(passengerId);
+
+    const bookings = await Booking.findAll({
+      where: { UserId: userId },
+    });
 
     res.status(200).json({ bookings });
   } catch (error) {
@@ -35,7 +44,10 @@ exports.getBookingsByUserId = async (req, res) => {
 exports.getBookingsByTripId = async (req, res) => {
   try {
     const tripId = req.params.tripId;
-    const bookings = await bookingModel.getBookingsByTripId(tripId);
+    // const bookings = await bookingModel.getBookingsByTripId(tripId);
+    const bookings = await Booking.findAll({
+      where: { TripId: tripId },
+    });
 
     res.status(200).json({ bookings });
   } catch (error) {
@@ -50,7 +62,13 @@ exports.updateBookingStatus = async (req, res) => {
     const bookingId = req.params.bookingId;
     const { newStatus } = req.body;
 
-    await bookingModel.updateBookingStatus(bookingId, newStatus);
+    // await bookingModel.updateBookingStatus(bookingId, newStatus);
+    await Booking.update(
+      { Status: newStatus },
+      {
+        where: { id: bookingId },
+      }
+    );
 
     res.status(200).json({ message: 'Statut de réservation mis à jour avec succès' });
   } catch (error) {

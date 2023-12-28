@@ -4,7 +4,14 @@ const paymentModel = require('../models/paymentModel');
 exports.createPayment = async (req, res) => {
   try {
     const { userId, tripId, amount, paymentStatus } = req.body;
-    await paymentModel.createPayment(userId, tripId, amount, paymentStatus);
+    // await paymentModel.createPayment(userId, tripId, amount, paymentStatus);
+    await Payment.create({
+      UserId: userId,
+      TripId: tripId,
+      Amount: amount,
+      Status: paymentStatus,
+    });
+
     res.status(200).json({ message: 'Paiement créé avec succès' });
   } catch (error) {
     console.error(error);
@@ -16,7 +23,10 @@ exports.createPayment = async (req, res) => {
 exports.getPaymentById = async (req, res) => {
   try {
     const paymentId = req.params.paymentId;
-    const payment = await paymentModel.getPaymentById(paymentId);
+    // const payment = await paymentModel.getPaymentById(paymentId);
+    const payment = await Payment.findOne({
+      where: { id: paymentId },
+    });
     if (payment) {
       res.status(200).json({ payment });
     } else {
@@ -32,7 +42,10 @@ exports.getPaymentById = async (req, res) => {
 exports.getPaymentsByPassengerId = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const payments = await paymentModel.getPaymentsByPassengerId(passengerId);
+    // const payments = await paymentModel.getPaymentsByPassengerId(passengerId);
+    const payments = await Payment.findAll({
+      where: { UserId: userId },
+    });
     res.status(200).json({ payments });
   } catch (error) {
     console.error(error);
@@ -45,7 +58,13 @@ exports.updatePaymentStatus = async (req, res) => {
   try {
     const paymentId = req.params.paymentId;
     const { paymentStatus } = req.body;
-    await paymentModel.updatePaymentStatus(paymentId, paymentStatus);
+    // await paymentModel.updatePaymentStatus(paymentId, paymentStatus);
+    await Payment.update(
+      { Status: paymentStatus },
+      {
+        where: { id: paymentId },
+      }
+    );
     res.status(200).json({ message: 'Statut du paiement mis à jour avec succès' });
   } catch (error) {
     console.error(error);

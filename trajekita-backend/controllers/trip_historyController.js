@@ -1,11 +1,16 @@
 // tripHistoryController.js
-const tripHistoryModel = require('../models/trip_historyModel');
+const {tripHistory} = require('../models');
 
 // Contrôleur pour enregistrer un trajet dans l'historique
 exports.recordTripHistory = async (req, res) => {
   try {
     const { userId, tripId, dateTime, cost } = req.body;
-    await tripHistoryModel.recordTripHistory(userId, tripId, dateTime, cost);
+    await TripHistory.create({
+      userId,
+      tripId,
+      dateTime,
+      cost,
+    });
     res.status(200).json({ message: 'Trajet enregistré dans l\'historique avec succès' });
   } catch (error) {
     console.error(error);
@@ -17,7 +22,11 @@ exports.recordTripHistory = async (req, res) => {
 exports.getTripHistoryByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const history = await tripHistoryModel.getTripHistoryByUserId(userId);
+    const history = await TripHistory.findAll({
+      where: {
+        userId: userId,
+      },
+    });
     res.status(200).json({ history });
   } catch (error) {
     console.error(error);
@@ -29,7 +38,11 @@ exports.getTripHistoryByUserId = async (req, res) => {
 exports.getTripHistoryByTripId = async (req, res) => {
   try {
     const tripId = req.params.tripId;
-    const history = await tripHistoryModel.getTripHistoryByTripId(tripId);
+    const history = await TripHistory.findAll({
+      where: {
+        tripId: tripId,
+      },
+    });
     res.status(200).json({ history });
   } catch (error) {
     console.error(error);
@@ -41,7 +54,11 @@ exports.getTripHistoryByTripId = async (req, res) => {
 exports.deleteTripHistoryById = async (req, res) => {
   try {
     const historyId = req.params.historyId;
-    await tripHistoryModel.deleteTripHistoryById(historyId);
+    await TripHistory.destroy({
+      where: {
+        id: historyId,
+      },
+    });
     res.status(200).json({ message: 'Enregistrement d\'historique de trajet supprimé avec succès' });
   } catch (error) {
     console.error(error);

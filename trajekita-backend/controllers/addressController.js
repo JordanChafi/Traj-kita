@@ -4,11 +4,17 @@ const addressModel = require('../models/addressModel');
 exports.createAddress = async (req, res) => {
   try {
     const { userId, label, location } = req.body;
-    await addressModel.createAddress(userId, label, location);
-    res.status(200).json({ message: 'Adresse créée avec succès' });
+    // await addressModel.createAddress(userId, label, location);
+    await Address.create({
+      Label: label,
+      Location: location,
+      userId: userId
+    });
+
+    res.status(200).json({ message: 'Adresse ajouté avec succès' });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la création de l\'adresse' });
+    res.status(500).json({ error: 'Erreur lors de l\'ajout de l\'adresse' });
   }
 };
 
@@ -16,7 +22,11 @@ exports.createAddress = async (req, res) => {
 exports.getAddressById = async (req, res) => {
   try {
     const addressId = req.params.addressId;
-    const address = await addressModel.getAddressById(addressId);
+    // const address = await addressModel.getAddressById(addressId);
+    const address = await Address.findOne({
+      where: { id: addressId },
+    });
+
     if (address) {
       res.status(200).json({ address });
     } else {
@@ -32,7 +42,11 @@ exports.getAddressById = async (req, res) => {
 exports.getAddressesByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const addresses = await addressModel.getAddressesByUserId(userId);
+    //const addresses = await addressModel.getAddressesByUserId(userId);
+    const addresses = await Address.findAll({
+      where: {userId: userId}
+    });
+
     res.status(200).json({ addresses });
   } catch (error) {
     console.error(error);
@@ -45,8 +59,22 @@ exports.updateAddress = async (req, res) => {
   try {
     const addressId = req.params.addressId;
     const { label, location } = req.body;
-    await addressModel.updateAddress(addressId, label, location);
-    res.status(200).json({ message: 'Adresse mise à jour avec succès' });
+
+    const [updatedCount] = await Address.update(
+      {
+        Label: label,
+        Location: location,
+      },
+      {
+        where: { id: addressId },
+      }
+    );
+
+    if (updatedCount > 0) {
+      res.status(200).json({ message: 'Adresse mise à jour avec succès' });
+    } else {
+      res.status(404).json({ error: 'Adresse non trouvée' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur lors de la mise à jour de l\'adresse' });
@@ -57,7 +85,12 @@ exports.updateAddress = async (req, res) => {
 exports.getAddressDetailsById = async (req, res) => {
   try {
     const addressId = req.params.addressId;
-    const address = await addressModel.getAddressById(addressId);
+    // const address = await addressModel.getAddressById(addressId);
+
+    const addresses = await Address.findAll({
+      where: { userId: userId },
+    });
+
     if (address) {
       res.status(200).json({ address });
     } else {
@@ -70,11 +103,33 @@ exports.getAddressDetailsById = async (req, res) => {
 };
 
 // Contrôleur pour supprimer une adresse par ID
+// exports.deleteAddressById = async (req, res) => {
+//   try {
+//     const addressId = req.params.addressId;
+//     await addressModel.deleteAddressById(addressId);
+//     res.status(200).json({ message: 'Adresse supprimée avec succès' });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Erreur lors de la suppression de l\'adresse' });
+//   }
+// };
+
+// Contrôleur pour supprimer une adresse par ID
 exports.deleteAddressById = async (req, res) => {
   try {
     const addressId = req.params.addressId;
-    await addressModel.deleteAddressById(addressId);
-    res.status(200).json({ message: 'Adresse supprimée avec succès' });
+
+    const deletedCount = await Address.destroy({
+      where: {
+        id: addressId,
+      },
+    });
+
+    if (deletedCount > 0) {
+      res.status(200).json({ message: 'Adresse supprimée avec succès' });
+    } else {
+      res.status(404).json({ error: 'Adresse non trouvée' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur lors de la suppression de l\'adresse' });

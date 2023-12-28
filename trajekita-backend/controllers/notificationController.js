@@ -1,11 +1,17 @@
-const notificationModel = require('../models/notificationModel');
+// const notificationModel = require('../models/notificationModel');
+const {Notification} = require('../models');
 
 // Contrôleur pour créer une notification
 exports.createNotification = async (req, res) => {
   try {
     const { userId, notificationContent, notificationStatus } = req.body;
 
-    await notificationModel.createNotification(userId, notificationContent, notificationStatus);
+    // await Notification.createNotification(userId, notificationContent, notificationStatus);
+    await Notification.create({
+      UserId: userId,
+      Content: notificationContent,
+      Status: notificationStatus,
+    });
 
     res.status(201).json({ message: 'Notification créée avec succès' });
   } catch (error) {
@@ -15,10 +21,13 @@ exports.createNotification = async (req, res) => {
 };
 
 // Contrôleur pour récupérer toutes les notifications d'un utilisateur
-exports.getNotificationsByRecipient = async (req, res) => {
+exports.getNotificationsByUser = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const notifications = await notificationModel.getNotificationsByUser(userId);
+    // const notifications = await Notification.getNotificationsByUser(userId);
+    const notifications = await Notification.findAll({
+      where: { UserId: userId },
+    });
 
     res.status(200).json({ notifications });
   } catch (error) {
@@ -32,7 +41,13 @@ exports.markAllNotificationsAsRead = async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    await notificationModel.markAllNotificationsAsRead(userId);
+    // await Notification.markAllNotificationsAsRead(userId);
+    await Notification.update(
+      { Status: 'read' },
+      {
+        where: { UserId: userId, Status: 'unread' },
+      }
+    );
 
     res.status(200).json({ message: 'Toutes les notifications ont été marquées comme lues' });
   } catch (error) {
