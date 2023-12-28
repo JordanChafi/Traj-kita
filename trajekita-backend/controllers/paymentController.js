@@ -1,10 +1,10 @@
-const paymentModel = require('../models/paymentModel');
+const { Payment } = require('../models');
 
 // Contrôleur pour créer un paiement
 exports.createPayment = async (req, res) => {
   try {
     const { userId, tripId, amount, paymentStatus } = req.body;
-    // await paymentModel.createPayment(userId, tripId, amount, paymentStatus);
+
     await Payment.create({
       UserId: userId,
       TripId: tripId,
@@ -23,10 +23,7 @@ exports.createPayment = async (req, res) => {
 exports.getPaymentById = async (req, res) => {
   try {
     const paymentId = req.params.paymentId;
-    // const payment = await paymentModel.getPaymentById(paymentId);
-    const payment = await Payment.findOne({
-      where: { id: paymentId },
-    });
+    const payment = await paymentModel.getPaymentById(paymentId);
     if (payment) {
       res.status(200).json({ payment });
     } else {

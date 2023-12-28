@@ -1,4 +1,4 @@
-const addressModel = require('../models/addressModel');
+const { Address } = require('../models');
 
 // Contrôleur pour créer une adresse
 exports.createAddress = async (req, res) => {
@@ -22,7 +22,7 @@ exports.createAddress = async (req, res) => {
 exports.getAddressById = async (req, res) => {
   try {
     const addressId = req.params.addressId;
-    // const address = await addressModel.getAddressById(addressId);
+    
     const address = await Address.findOne({
       where: { id: addressId },
     });
@@ -42,9 +42,9 @@ exports.getAddressById = async (req, res) => {
 exports.getAddressesByUserId = async (req, res) => {
   try {
     const userId = req.params.userId;
-    //const addresses = await addressModel.getAddressesByUserId(userId);
+    
     const addresses = await Address.findAll({
-      where: {userId: userId}
+      where: { userId: userId },
     });
 
     res.status(200).json({ addresses });
@@ -60,6 +60,7 @@ exports.updateAddress = async (req, res) => {
     const addressId = req.params.addressId;
     const { label, location } = req.body;
 
+    // Utiliser Sequelize pour mettre à jour l'adresse par ID
     const [updatedCount] = await Address.update(
       {
         Label: label,
@@ -85,11 +86,9 @@ exports.updateAddress = async (req, res) => {
 exports.getAddressDetailsById = async (req, res) => {
   try {
     const addressId = req.params.addressId;
-    // const address = await addressModel.getAddressById(addressId);
-
-    const addresses = await Address.findAll({
-      where: { userId: userId },
-    });
+    
+    // Utiliser Sequelize pour trouver l'adresse par ID
+    const address = await Address.findByPk(addressId);
 
     if (address) {
       res.status(200).json({ address });

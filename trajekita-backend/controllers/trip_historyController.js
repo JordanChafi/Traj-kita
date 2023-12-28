@@ -1,5 +1,5 @@
 // tripHistoryController.js
-const {tripHistory} = require('../models');
+const tripHistoryModel = require('../models/trip_historyModel');
 
 // Contrôleur pour enregistrer un trajet dans l'historique
 exports.recordTripHistory = async (req, res) => {
@@ -11,6 +11,7 @@ exports.recordTripHistory = async (req, res) => {
       dateTime,
       cost,
     });
+
     res.status(200).json({ message: 'Trajet enregistré dans l\'historique avec succès' });
   } catch (error) {
     console.error(error);

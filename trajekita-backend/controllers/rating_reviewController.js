@@ -1,12 +1,11 @@
 // ratingReviewController.js
-const ratingReviewModel = require('../models/rating_reviewModel');
+const { RatingReview } = require('../models');
 
 // Contrôleur pour créer un avis et commentaire
 exports.createRatingReview = async (req, res) => {
   try {
     const { ratedDriverId, ratingPassengerId, rating, review } = req.body;
 
-    // await ratingReviewModel.createRatingReview(ratedDriverId, ratingPassengerId, rating, review);
     await RatingReview.create({
       RatedDriverId: ratedDriverId,
       RatingPassengerId: ratingPassengerId,
@@ -25,8 +24,6 @@ exports.createRatingReview = async (req, res) => {
 exports.getRatingsAndReviewsForDriver = async (req, res) => {
   try {
     const ratedDriverId = req.params.ratedDriverId;
-    // const ratingsAndReviews = await ratingReviewModel.getRatingsAndReviewsForDriver(ratedDriverId);
-
     const ratingsAndReviews = await RatingReview.findAll({
       where: { RatedDriverId: ratedDriverId },
     });
@@ -39,11 +36,10 @@ exports.getRatingsAndReviewsForDriver = async (req, res) => {
 };
 
 // Contrôleur pour récupérer tous les avis et commentaires d'un passager
+
 exports.getRatingsAndReviewsByPassenger = async (req, res) => {
   try {
     const ratingPassengerId = req.params.ratingPassengerId;
-    // const ratingsAndReviews = await ratingReviewModel.getRatingsAndReviewsByPassenger(ratingPassengerId);
-
     const ratingsAndReviews = await RatingReview.findAll({
       where: { RatingPassengerId: ratingPassengerId },
     });

@@ -1,12 +1,10 @@
-// const notificationModel = require('../models/notificationModel');
-const {Notification} = require('../models');
+const { Notification } = require('../models');
 
 // Contrôleur pour créer une notification
 exports.createNotification = async (req, res) => {
   try {
     const { userId, notificationContent, notificationStatus } = req.body;
 
-    // await Notification.createNotification(userId, notificationContent, notificationStatus);
     await Notification.create({
       UserId: userId,
       Content: notificationContent,
@@ -24,7 +22,6 @@ exports.createNotification = async (req, res) => {
 exports.getNotificationsByUser = async (req, res) => {
   try {
     const userId = req.params.userId;
-    // const notifications = await Notification.getNotificationsByUser(userId);
     const notifications = await Notification.findAll({
       where: { UserId: userId },
     });
@@ -41,7 +38,6 @@ exports.markAllNotificationsAsRead = async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    // await Notification.markAllNotificationsAsRead(userId);
     await Notification.update(
       { Status: 'read' },
       {

@@ -1,7 +1,7 @@
-const {DataTypes} = require('sequelize');
+const { DataTypes } = require('sequelize');
 
 module.exports = (sequelize) => {
-  return sequelize.define('address', {
+  const Address = sequelize.define('address', {
     ID: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -21,25 +21,26 @@ module.exports = (sequelize) => {
       allowNull: true
     }
   }, {
-    sequelize,
     tableName: 'address',
     timestamps: false,
     indexes: [
       {
-        name: "PRIMARY",
+        name: 'PRIMARY',
         unique: true,
-        using: "BTREE",
+        using: 'BTREE',
         fields: [
-          { name: "ID" },
+          { name: 'ID' },
         ]
       },
       {
-        name: "UserID",
-        using: "BTREE",
+        name: 'UserID',
+        using: 'BTREE',
         fields: [
-          { name: "UserID" },
+          { name: 'UserID' },
         ]
       },
     ]
   });
+
+  return Address;
 };

@@ -1,6 +1,7 @@
-const {DataTypes} = require('sequelize');
-module.exports = (sequelize) =>{
-  return sequelize.define('booking', {
+const { DataTypes } = require('sequelize');
+
+module.exports = (sequelize) => {
+  const Booking = sequelize.define('booking', {
     ID: {
       autoIncrement: true,
       type: DataTypes.INTEGER,
@@ -12,33 +13,34 @@ module.exports = (sequelize) =>{
       allowNull: true
     },
     BookingStatus: {
-      type: DataTypes.ENUM('Pending','Accepted','Rejected'),
+      type: DataTypes.ENUM('Pending', 'Accepted', 'Rejected'),
       allowNull: true
     },
     Amount: {
-      type: DataTypes.DECIMAL(10,2),
+      type: DataTypes.DECIMAL(10, 2),
       allowNull: true
     }
   }, {
-    sequelize,
     tableName: 'booking',
     timestamps: false,
     indexes: [
       {
-        name: "PRIMARY",
+        name: 'PRIMARY',
         unique: true,
-        using: "BTREE",
+        using: 'BTREE',
         fields: [
-          { name: "ID" },
+          { name: 'ID' },
         ]
       },
       {
-        name: "TripID",
-        using: "BTREE",
+        name: 'TripID',
+        using: 'BTREE',
         fields: [
-          { name: "TripID" },
+          { name: 'TripID' },
         ]
       },
     ]
   });
+
+  return Booking;
 };
