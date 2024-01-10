@@ -44,14 +44,14 @@ module.exports = function (sequelize) {
       allowNull: true
     }, 
   // Ajout des champs pour l'activation du compte lors de l'inscription
-    RegistrationCode: {
-      type: DataTypes.STRING(255),
-      allowNull: true
-    },
-    RegistrationCodeExpiry: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
+    // RegistrationCode: {
+    //   type: DataTypes.STRING(255),
+    //   allowNull: true
+    // },
+    // RegistrationCodeExpiry: {
+    //   type: DataTypes.DATE,
+    //   allowNull: true
+    // },
   }, 
   
   // {

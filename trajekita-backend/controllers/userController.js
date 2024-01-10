@@ -6,13 +6,20 @@ const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 const twilio = require('twilio');
 const { User } = require('../models');
+const { validationResult } = require('express-validator');
 // const { TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN } = process.env;
 
 // const clientTwilio = twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
 // Contrôleur pour l'inscription de l'utilisateur
-exports.registerUser = async (req, res) => {
+exports.registerUser = async  (req, res) => {
   try {
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array()[0]['msg'] });
+    }
     const { firstName, lastName, email, phone, password } = req.body;
 
     // Vérifier si l'utilisateur existe déjà
@@ -25,7 +32,7 @@ exports.registerUser = async (req, res) => {
     );
 
     if (user != null) {
-      return res.status(400).json({ error: 'L\'adresse e-mail ou le numéro de téléphone est déjà utilisé.' });
+      return res.status(400).json({status: false, message: 'L\'adresse e-mail ou le numéro de téléphone est déjà utilisé.' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -39,30 +46,32 @@ exports.registerUser = async (req, res) => {
       Password: hashedPassword,
     });
 
-    // Génération du code OTP et de sa date d'expiration pour l'inscription
-    const registrationCode = generateOtpCode(6);
-    const registrationCodeExpiry = new Date();
-    registrationCodeExpiry.setMinutes(registrationCodeExpiry.getMinutes() + 10);
+    return res.status(201).json({ status: true,message:"Succès, votre compte a été créé.", newUser});
 
-    // Mise à jour de l'utilisateur avec le code OTP et sa date d'expiration
-    await newUser.update({
-      RegistrationCode: registrationCode,
-      RegistrationCodeExpiry: registrationCodeExpiry,
-    });
+    // // Génération du code OTP et de sa date d'expiration pour l'inscription
+    // // const registrationCode = generateOtpCode(6);
+    // const registrationCodeExpiry = new Date();
+    // registrationCodeExpiry.setMinutes(registrationCodeExpiry.getMinutes() + 10);
 
-    // Envoi du code OTP par e-mail
-    //const sendOtpEmail = sendResetCodeByEmail(email, resetCode);
-    const emailSent = await sendOtpEmail(newUser.Email, registrationCode);
+    // // Mise à jour de l'utilisateur avec le code OTP et sa date d'expiration
+    // await newUser.update({
+    //   // RegistrationCode: registrationCode,
+    //   RegistrationCodeExpiry: registrationCodeExpiry,
+    // });
+
+    // // Envoi du code OTP par e-mail
+    // //const sendOtpEmail = sendResetCodeByEmail(email, resetCode);
+    // const emailSent = await sendOtpEmail(newUser.Email, registrationCode);
 
 
-    if (emailSent) {
-      res.status(200).json({ message: 'Utilisateur enregistré avec succès. Un code OTP d\'inscription a été envoyé par e-mail.' });
-    } else {
-      res.status(500).json({ error: 'Erreur lors de l\'envoi du code OTP par e-mail.' });
-    }
+    // if (emailSent) {
+    //   res.status(200).json({ message: 'Utilisateur enregistré avec succès. Un code OTP d\'inscription a été envoyé par e-mail.' });
+    // } else {
+    //   res.status(500).json({ message: 'Erreur lors de l\'envoi du code OTP par e-mail.' });
+    // }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de l\'inscription de l\'utilisateur' });
+    res.status(500).json({ message: 'Erreur lors de l\'inscription de l\'utilisateur' });
   }
 };
 
@@ -98,16 +107,16 @@ exports.loginUser = async (req, res) => {
         };
         res.setHeader('Set-Cookie', cookie.serialize('access_token', token, cookieOptions));
         
-        res.status(200).json({ message: 'Connexion réussie', token, user });
+        res.status(200).json({ status: true, token, user });
       } else {
-        res.status(401).json({ error: 'Mot de passe incorrect' });
+        res.status(401).json({ status: false,message: 'Mot de passe incorrect' });
       }
     } else {
-      res.status(404).json({ error: 'Utilisateur non trouvé' });
+      res.status(404).json({ status: false,message: 'Utilisateur non trouvé' });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Erreur lors de la connexion de l\'utilisateur' });
+    res.status(500).json({ status: false,message: 'Erreur lors de la connexion de l\'utilisateur' });
   }
 };
 
