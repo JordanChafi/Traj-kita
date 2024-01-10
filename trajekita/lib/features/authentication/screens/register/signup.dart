@@ -5,7 +5,6 @@ import 'package:trajekita/utils/constants/sizes.dart';
 import 'package:trajekita/utils/constants/text_strings.dart';
 import 'package:trajekita/utils/helpers/helper_functions.dart';
 
-import 'package:http/http.dart' as http;
 
 class SignupScreen extends StatelessWidget {
   const SignupScreen({super.key});

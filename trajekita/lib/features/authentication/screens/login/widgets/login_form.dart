@@ -21,7 +21,6 @@ class TLoginForm extends StatefulWidget {
 }
 
 class _TLoginFormState extends State<TLoginForm> {
-
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -30,20 +29,18 @@ class _TLoginFormState extends State<TLoginForm> {
 
   void _login() async {
     if (_formKey.currentState!.validate()) {
-        print("je suis là");
-      
+      print("je suis là");
+
       try {
-        final User user = await _userProvider.loginUser(
+        final User? user = await _userProvider.loginUser(
           emailController.text,
           passwordController.text,
         );
 
-        print("Je suis là");
-
         // Affichage du SnackBar
         Get.snackbar(
           'Connexion réussie',
-          'Bienvenue, ${user.firstName}!',
+          'Bienvenue, ${user!.firstName}!',
           snackPosition: SnackPosition.BOTTOM,
           margin: const EdgeInsets.all(30),
           backgroundColor: TColors.primary,
@@ -55,12 +52,11 @@ class _TLoginFormState extends State<TLoginForm> {
           forwardAnimationCurve: Curves.easeOutBack,
           reverseAnimationCurve: Curves.easeIn,
         );
-        
+
         // Redirection vers la page suivante
         Get.to(() => const HomeScreen());
       } catch (error) {
         // Récupération de l'erreur dans le user_provider
-        
       }
     }
   }
@@ -69,31 +65,33 @@ class _TLoginFormState extends State<TLoginForm> {
   @override
   Widget build(BuildContext context) {
     return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: TSizes.spaceBtwSections),
-        child: Column(
-          children: [
-            /// Email
-            TextFormField(
+        key: _formKey,
+        child: Padding(
+          padding:
+              const EdgeInsets.symmetric(vertical: TSizes.spaceBtwSections),
+          child: Column(
+            children: [
+              /// Email
+              TextFormField(
                 controller: emailController,
                 decoration: const InputDecoration(
                   prefixIcon: Icon(Iconsax.direct_right),
                   labelText: TTexts.email,
                 ),
                 validator: (value) {
-                  if (value!.isEmpty || !RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                  if (value!.isEmpty ||
+                      !RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
                     return 'Veuillez entrer une adresse e-mail valide';
                   }
                   return null;
                 },
               ),
-            const SizedBox(
-              height: TSizes.spaceBtwInputsFields,
-            ),
+              const SizedBox(
+                height: TSizes.spaceBtwInputsFields,
+              ),
 
-            /// Password
-            TextFormField(
+              /// Password
+              TextFormField(
                 controller: passwordController,
                 obscureText: _obscureText,
                 decoration: InputDecoration(
@@ -118,78 +116,76 @@ class _TLoginFormState extends State<TLoginForm> {
                 },
               ),
 
-            const SizedBox(height: TSizes.spaceBtwInputsFields / 2),
+              const SizedBox(height: TSizes.spaceBtwInputsFields / 2),
 
-            /// Remember Me & Forgot Password
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                /// Remember Me
-                // Row(
-                //   children: [
-                //     Checkbox(value: true, onChanged: (value) {}),
-                //     const Text(TTexts.rememberMe),
-                //   ],
-                // ),
+              /// Remember Me & Forgot Password
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  /// Remember Me
+                  // Row(
+                  //   children: [
+                  //     Checkbox(value: true, onChanged: (value) {}),
+                  //     const Text(TTexts.rememberMe),
+                  //   ],
+                  // ),
 
-                /// Forgot Password
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      ForgotPasswordScreen.modalBottomSheet(context);
-                    },
-                    child: const Text(
-                      TTexts.forgotPassword,
-                      style: TextStyle(color: TColors.primary),
+                  /// Forgot Password
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        ForgotPasswordScreen.modalBottomSheet(context);
+                      },
+                      child: const Text(
+                        TTexts.forgotPassword,
+                        style: TextStyle(color: TColors.primary),
+                      ),
+                      //style: Color(TColors.primary),
                     ),
-                    //style: Color(TColors.primary),
+                  )
+                ],
+              ),
+              const SizedBox(height: TSizes.spaceBtwItems),
+
+              /// Sign In Button
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    _login();
+                    //  if( _formKey.currentState!.validate()){
+                    //     // print(emailController.text);
+                    //     String email = emailController.text;
+                    //     String password = passwordController.text;
+
+                    //     String result =  user
+                    //  }
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(TColors.primary),
                   ),
-                )
-              ],
-            ),
-            const SizedBox(height: TSizes.spaceBtwItems),
-
-            /// Sign In Button
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () {
-
-                  _login();
-                //  if( _formKey.currentState!.validate()){
-                //     // print(emailController.text);
-                //     String email = emailController.text;
-                //     String password = passwordController.text;
-
-                //     String result =  user
-                //  }
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(TColors.primary),
-                ),
-                child: const Text(TTexts.signIn),
-              ),
-            ),
-            const SizedBox(
-              height: TSizes.spaceBtwInputsFields,
-            ),
-
-            /// Create Account Button
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton(
-                onPressed: () => Get.to(() => const SignupScreen()),
-                child: const Text(
-                  TTexts.createAccount,
-                  style: TextStyle(color: TColors.primary),
+                  child: const Text(TTexts.signIn),
                 ),
               ),
-            ),
-            // const SizedBox(height: TSizes.spaceBtwSections,),
-          ],
-        ),
-      )
-    );
+              const SizedBox(
+                height: TSizes.spaceBtwInputsFields,
+              ),
+
+              /// Create Account Button
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton(
+                  onPressed: () => Get.to(() => const SignupScreen()),
+                  child: const Text(
+                    TTexts.createAccount,
+                    style: TextStyle(color: TColors.primary),
+                  ),
+                ),
+              ),
+              // const SizedBox(height: TSizes.spaceBtwSections,),
+            ],
+          ),
+        ));
   }
 }

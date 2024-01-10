@@ -4,14 +4,15 @@ import 'package:http/http.dart' as http;
 // import 'package:get/get.dart';
 import 'package:trajekita/requests/models/user_models.dart';
 
-
 class UserService {
   final String apiUrl;
 
   UserService(this.apiUrl);
 
   // Services Inscription
-  Future<User> registerUser(String firstName, String lastName, String email, String phoneNumber, String password, {String? profilePhoto}) async {
+  Future<User> registerUser(String firstName, String lastName, String email,
+      String phoneNumber, String password,
+      {String? profilePhoto}) async {
     final newUser = User(
       id: 0,
       firstName: firstName,
@@ -35,40 +36,36 @@ class UserService {
     } else {
       print('Erreur lors de l\'inscription: ${response.statusCode}');
       throw Exception('Echec lors de l\'inscription');
-    }    
+    }
   }
 
   // Services Connexion
-  Future<User> loginUser(String identifier, String password) async {
+  Future<Map<String, dynamic>> loginUser(
+      String identifier, String password) async {
     try {
-
       Map<String, dynamic> data = {
-          'email': identifier,
-          'password': password,
-        };
+        'identifier': identifier,
+        'password': password,
+      };
 
-        print(data);
-        print(apiUrl);
+      final url = Uri.parse('http://192.168.1.23:4000/api/users/login');
+
+      print(data);
+      print(apiUrl);
 
       final response = await http.post(
-        Uri.parse('$apiUrl/login'),
+        url,
         body: jsonEncode(data),
-        headers:{
+        headers: {
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        
       );
 
-      print("response.body");
-
-      if (response.statusCode == 200) {
-        return User.fromJson(jsonDecode(response.body));
-      // return User.fromJson({"message": "response.body"});
-      } else {
-        throw Exception('Échec de la connexion');
-      }
+      print(response.statusCode);
+      print(jsonDecode(response.body));
+      return jsonDecode(response.body);
     } catch (error) {
-      throw Exception('Erreur lors de la connexion: $error');
+      return {"status": false, "message": "Erreur lors de la requete"};
     }
   }
 }

@@ -7,34 +7,47 @@ import 'package:trajekita/requests/services/auth_services.dart';
 import 'package:trajekita/utils/constants/colors.dart';
 import 'package:http/http.dart' as http;
 
-
 class UserProvider {
-  UserService userService = UserService("http:192.168.1.23:3000/api/users");
+  UserService userService = UserService("http://192.168.1.23:3000/api/users");
 
   // UserProvider(this.userService);
 
   // Providers Register
-  Future<User> registerUser(
-    String firstName, 
-    String lastName, 
-    String email, 
-    String phoneNumber, 
-    String password, 
-    {
-      String? profilePhoto
-    }
-
-  )
-  async {
-    return userService.registerUser(firstName, lastName, email, phoneNumber, password, profilePhoto: profilePhoto);
+  Future<User> registerUser(String firstName, String lastName, String email,
+      String phoneNumber, String password,
+      {String? profilePhoto}) async {
+    return userService.registerUser(
+        firstName, lastName, email, phoneNumber, password,
+        profilePhoto: profilePhoto);
   }
 
   // Providers Login
-   Future<User> loginUser(String identifier, String password) async {
-    
+  Future<User?> loginUser(String identifier, String password) async {
     try {
-      return userService.loginUser(identifier, password);
+      Map<String, dynamic> result =
+          await userService.loginUser(identifier, password);
+      if (result['status'] == false) {
+        // print('Une erreur pass cool $response');
+        Get.snackbar(
+          'Echec de connexion',
+          'Échec de la connexion: ${result['message']}',
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(30),
+          backgroundColor: TColors.error,
+          icon: const Icon(Icons.error, color: Colors.white),
+          shouldIconPulse: false,
+          duration: const Duration(seconds: 5),
+          isDismissible: true,
+          leftBarIndicatorColor: Colors.white,
+          forwardAnimationCurve: Curves.easeOutBack,
+          reverseAnimationCurve: Curves.easeIn,
+        );
+      } else {
+        print(result["user"]);
+        return User.fromJson(result['user']);
+      }
     } catch (error) {
+      print('Une erreur pass cool $error');
       Get.snackbar(
         'Erreur de connexion',
         'Échec de la connexion: $error',
