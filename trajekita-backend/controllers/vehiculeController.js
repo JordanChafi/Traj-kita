@@ -1,4 +1,4 @@
-const {Vehicule} = require('../models');
+const {Vehicule, Address} = require('../models');
 
 // Contrôleur pour créer un nouveau véhicule
 exports.createVehicule = async (req, res) => {
@@ -39,6 +39,7 @@ exports.getVehiculeById = async (req, res) => {
 
 // Contrôleur pour récupérer tous les véhicules d'un conducteur
 exports.getVehiculesByUserId = async (req, res) => {
+
   try {
     const userId = req.params.driverId;
     const vehicules = await Vehicule.findAll({

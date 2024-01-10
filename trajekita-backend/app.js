@@ -22,7 +22,7 @@ const tripRoutes = require('./routes/tripRoutes');
 const vehiculeRoutes = require('./routes/vehiculeRoutes');
 // const trip_historyRoutes = require('./routes/Trip_historyRoutes');
 // const rating_reviewRoutes = require('./routes/rating_reviewRoutes');
-// const addressRoutes = require('./routes/addressRoutes');
+const addressRoutes = require('./routes/addressRoutes');
 // const bookingRoutes = require('./routes/bookingRoutes');
 // const notificationRoutes = require('./routes/notificationRoutes');
 
@@ -30,7 +30,7 @@ const vehiculeRoutes = require('./routes/vehiculeRoutes');
 app.use('/api/users', userRoutes);
 app.use('/trips', tripRoutes);
 // app.use('/payments', paymentRoutes);
-// app.use('/address', addressRoutes);
+app.use('/address', addressRoutes);
 // app.use('/booking', bookingRoutes);
 // app.use('/tripsHistory', trip_historyRoutes);
 app.use('/api/vehicule', vehiculeRoutes);

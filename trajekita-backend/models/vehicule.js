@@ -33,28 +33,28 @@ module.exports = (sequelize) => {
       allowNull: true
     },
   }
-//   ,{
-//     sequelize,
-//     tableName: 'address',
-//     timestamps: false,
-//     indexes: [
-//       {
-//         name: "PRIMARY",
-//         unique: true,
-//         using: "BTREE",
-//         fields: [
-//           { name: "ID" },
-//         ]
-//       },
-//       {
-//         name: "UserID",
-//         using: "BTREE",
-//         fields: [
-//           { name: "UserID" },
-//         ]
-//       },
-//     ]
-//   }
+  // ,{
+  //   sequelize,
+  //   tableName: 'Vehicule',
+  //   timestamps: false,
+  //   indexes: [
+  //     {
+  //       name: "PRIMARY",
+  //       unique: true,
+  //       using: "BTREE",
+  //       fields: [
+  //         { name: "ID" },
+  //       ]
+  //     },
+  //     {
+  //       name: "UserID",
+  //       using: "BTREE",
+  //       fields: [
+  //         { name: "UserID" },
+  //       ]
+  //     },
+  //   ]
+  // }
   );
 
   Vehicule.associate = (models) => {

@@ -40,7 +40,7 @@ module.exports = function(sequelize) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    VehicleID: {
+    VehiculeID: {
       type: DataTypes.INTEGER,
       allowNull: true
     }
@@ -65,10 +65,10 @@ module.exports = function(sequelize) {
         ]
       },
       {
-        name: "VehicleID",
+        name: "VehiculeID",
         using: "BTREE",
         fields: [
-          { name: "VehicleID" },
+          { name: "VehiculeID" },
         ]
       },
     ]
