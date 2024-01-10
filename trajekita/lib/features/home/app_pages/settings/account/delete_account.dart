@@ -1,18 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:trajekita/requests/providers/user_provider.dart';
 import 'package:trajekita/utils/constants/colors.dart';
 import 'package:trajekita/utils/constants/sizes.dart';
 
 class DeleteAccountScreen extends StatelessWidget {
-  const DeleteAccountScreen({Key? key}) : super(key: key);
+  final int userId; // Ajoutez cette ligne pour déclarer userId
+
+  const DeleteAccountScreen({Key? key, required this.userId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Supprimer le compte'),
+        title: const Text('Supprimer le compte'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(15),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -29,15 +39,16 @@ class DeleteAccountScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () async {
+                  await UserProvider().deleteUser(userId);
+                },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(
-                      TColors.error), // Couleur d'arrière-plan rouge
+                    TColors.error), // Couleur d'arrière-plan rouge
                   side: MaterialStateProperty.all(
-                      BorderSide(color: TColors.error)), // Bordure rouge
+                    const BorderSide(color: TColors.error)), // Bordure rouge
                 ),
-                child: const Text('Supprimer le compte',
-                    style: TextStyle(color: TColors.textWhite)),
+                child: const Text('Supprimer le compte', style: TextStyle(color: TColors.textWhite)),
               ),
             ),
           ],

@@ -1,21 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:trajekita/utils/constants/colors.dart';
+import 'package:trajekita/utils/constants/sizes.dart';
 
 class MessagesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Discussion'),
+        backgroundColor: TColors.white,
+        title: const Text('Discussion'),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
       ),
-      body: MessageScreen(),
+      
+      body:  Padding(
+        padding: const EdgeInsets.only(top: TSizes.spaceBtwSections - 5),
+        child: MessageScreen(),
+      )
     );
   }
 }

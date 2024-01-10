@@ -44,6 +44,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             Navigator.pop(context);
           },
         ),
+        backgroundColor: Colors.white,
       ),
       body: ListView.builder(
         itemCount: notifications.length,

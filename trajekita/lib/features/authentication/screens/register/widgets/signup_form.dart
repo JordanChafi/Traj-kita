@@ -1,17 +1,17 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:trajekita/features/authentication/screens/forgotPassword/forgotPassword_otp/otp_screen.dart';
+import 'package:trajekita/utils/constants/colors.dart';
 import 'package:trajekita/utils/constants/sizes.dart';
 import 'package:trajekita/utils/constants/text_strings.dart';
-// import 'package:trajekita/utils/helpers/helper_functions.dart';
-
 import 'package:http/http.dart' as http;
 
-
 class TSignupForm extends StatelessWidget {
+
+  final formKey = GlobalKey<FormState>();
 
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -43,23 +43,52 @@ class TSignupForm extends StatelessWidget {
         },
       );
 
-
       if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = json.decode(response.body);
+        final String successMessage = responseData['message'];
+
+        // Affichage du SnackBar de succès
+        Get.snackbar(
+          "Message de Succès",
+          successMessage,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(30),
+          backgroundColor: TColors.primary,
+          icon: const Icon(Icons.check, color: Colors.white),
+          shouldIconPulse: false,
+          duration: const Duration(seconds: 3), // Durée du SnackBar de succès
+          isDismissible: true, // Si le SnackBar est dismissible en cliquant dessus
+          leftBarIndicatorColor: Colors.white, // Couleur de la barre latérale à gauche
+          borderRadius: 10,
+          forwardAnimationCurve: Curves.easeOutBack, // Courbe d'animation avant
+          reverseAnimationCurve: Curves.easeIn, // Courbe d'animation arrière
+        );
+
         // L'inscription a réussi, redirigez l'utilisateur vers la page suivante
-        // ou effectuez d'autres actions nécessaires
         Get.to(() => const OTPScreen());
       } else {
         // Gérez les erreurs d'inscription
         final Map<String, dynamic> responseData = json.decode(response.body);
         final String errorMessage = responseData['error'];
-        // Affichez le message d'erreur à l'utilisateur
-        // Vous pouvez utiliser un Scaffold pour afficher une SnackBar par exemple
-         Get.snackbar(
-          'Erreur d\'inscription',
+
+        // Affichage du SnackBar d'erreur
+        Get.snackbar(
+          "Message d'Erreur",
           errorMessage,
-          backgroundColor: Colors.red,
+          snackPosition: SnackPosition.BOTTOM,
+          margin: const EdgeInsets.all(30),
+          backgroundColor: TColors.primary,
+          icon: const Icon(Icons.error, color: Colors.white),
+          shouldIconPulse: false,
+          duration: const Duration(seconds: 5), // Durée du SnackBar d'erreur
+          isDismissible: true, // Si le SnackBar est dismissible en cliquant dessus
+          leftBarIndicatorColor: Colors.white, // Couleur de la barre latérale à gauche
+          borderRadius: 10,
+          forwardAnimationCurve: Curves.easeOutBack, // Courbe d'animation avant
+          reverseAnimationCurve: Curves.easeIn, // Courbe d'animation arrière
         );
       }
+
     } catch (e) {
       // Gérez les erreurs inattendues
       print('Erreur inattendue lors de l\'inscription: $e');
@@ -68,43 +97,78 @@ class TSignupForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final dark = THelperFunctions.isDarkMode(context);
 
     return Form(
+      key: formKey,
       child: Column(
         children: [
           /// Fullname
           TextFormField(
+            controller: fullNameController,
             expands: false,
             decoration: const InputDecoration(
-                labelText: TTexts.fullname, prefixIcon: Icon(Iconsax.user)),
+              labelText: TTexts.fullname, 
+              prefixIcon: Icon(Iconsax.user)
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Veuillez entrer votre nom complet.';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: TSizes.spaceBtwInputsFields),
 
           // Email
           TextFormField(
+            controller: emailController,
             expands: false,
             decoration: const InputDecoration(
-                labelText: TTexts.email,
-                prefixIcon: Icon(Iconsax.direct_right)),
+              labelText: TTexts.email,
+              prefixIcon: Icon(Iconsax.direct_right)
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Veuillez entrer votre adresse mail.';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: TSizes.spaceBtwInputsFields),
 
           // Phone Number
           TextFormField(
+            controller: phoneNumberController,
+            keyboardType: TextInputType.phone,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             expands: false,
             decoration: const InputDecoration(
-                labelText: TTexts.phoneNumber, prefixIcon: Icon(Iconsax.call)),
+              labelText: TTexts.phoneNumber, prefixIcon: Icon(Iconsax.call)
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Veuillez entrer votre numero de téléphone.';
+              }
+              return null;
+            },
           ),
           const SizedBox(height: TSizes.spaceBtwInputsFields),
 
           // Password
           TextFormField(
+            controller: passwordController,
             expands: false,
             decoration: const InputDecoration(
-                labelText: TTexts.password, prefixIcon: Icon(Iconsax.lock)),
+              labelText: TTexts.password, prefixIcon: Icon(Iconsax.lock)
+            ),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Veuillez entrer votre mot de passe.';
+              }
+              return null;
+            },
           ),
-          const SizedBox(height: TSizes.spaceBtwInputsFields),
+          // const SizedBox(height: TSizes.spaceBtwInputsFields),
 
           /// Terms & Privacy
           // const TTermsAndConditionCheckbox(),
@@ -115,13 +179,16 @@ class TSignupForm extends StatelessWidget {
             child: ElevatedButton(
               //onPressed: () => Get.to(() => const OTPScreen()),
               onPressed: () {
+                // Validation du formulaire
+                if (formKey.currentState!.validate()){
+                  // Récupération des valeurs de chaque champs 
+                  final fullName = fullNameController.text;
+                  final email = emailController.text;
+                  final phoneNumber = phoneNumberController.text;
+                  final password = passwordController.text;
 
-                final fullName = fullNameController.text; // récupération de la valeur du champ de texte du nom complet
-                final email = emailController.text; // récupération la valeur du champ de texte de l'e-mail
-                final phoneNumber = phoneNumberController.text; // récupération la valeur du champ de texte du numéro de téléphone
-                final password = passwordController.text; // récupération la valeur du champ de texte du mot de passe
-
-                registerUser(context, fullName, email, phoneNumber, password);
+                  registerUser(context, fullName, email, phoneNumber, password);
+                }                
               },
               child: const Text(TTexts.createAccount),
             ),

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:trajekita/utils/constants/colors.dart';
 import 'package:trajekita/utils/constants/sizes.dart';
 
-class AvailableVehiclesPage extends StatelessWidget {
+class AvailableVehicleScreen extends StatelessWidget {
   final List<VehicleCard> vehicles = [
-    VehicleCard(
+    const VehicleCard(
       driverName: 'Jack Doe',
       vehicleModel: 'Toyota Camry',
       plateNumber: 'ABC123',
@@ -12,7 +12,7 @@ class AvailableVehiclesPage extends StatelessWidget {
       startLocation: 'Lieu de départ 1',
       endLocation: 'Lieu d\'arrivée 1',
     ),
-    VehicleCard(
+    const VehicleCard(
       driverName: 'Emma Doe',
       vehicleModel: 'Honda Accord',
       plateNumber: 'XYZ789',
@@ -20,7 +20,7 @@ class AvailableVehiclesPage extends StatelessWidget {
       startLocation: 'Lieu de départ 2',
       endLocation: 'Lieu d\'arrivée 2',
     ),
-    VehicleCard(
+    const VehicleCard(
       driverName: 'Bennett Doe',
       vehicleModel: 'Tesla Model 3',
       plateNumber: 'DEF456',
@@ -34,19 +34,19 @@ class AvailableVehiclesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Conducteurs disponibles'),
-        leading: BackButton(),
+        title: const Text('Conducteurs disponibles'),
+        leading: const BackButton(),
         backgroundColor: Colors.transparent,
         foregroundColor: TColors.black,
         elevation: 0,
         centerTitle: false,
       ),
       body: ListView(
-        padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
         children: [
           Text(
             '${vehicles.length} Conducteurs disponibles',
-            style: TextStyle(color: TColors.darkGrey),
+            style: const TextStyle(color: TColors.darkGrey),
           ),
           const SizedBox(height: TSizes.spaceBtwItems),
           ...vehicles,
@@ -78,19 +78,19 @@ class VehicleCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Color.fromARGB(255, 255, 255, 255),
+      color: const Color.fromARGB(255, 255, 255, 255),
       shape: RoundedRectangleBorder(
-        side: BorderSide(color: TColors.primary, width: 1.0),
+        side: const BorderSide(color: TColors.primary, width: 1.0),
         borderRadius: BorderRadius.circular(8.0),
       ),
-      margin: EdgeInsets.only(bottom: 16.0),
+      margin: const EdgeInsets.only(bottom: 16.0),
       child: ListTile(
-        contentPadding: EdgeInsets.all(16.0),
+        contentPadding: const EdgeInsets.all(16.0),
         title: Padding(
           padding: const EdgeInsets.only(bottom: 8.0),
           child: Text(
             driverName,
-            style: TextStyle(fontWeight: FontWeight.w500, color: Colors.black),
+            style: const TextStyle(fontWeight: FontWeight.w700, color: Colors.black),
           ),
         ),
         subtitle: Column(
@@ -101,13 +101,13 @@ class VehicleCard extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: '$vehicleModel | $plateNumber | ',
-                    style: TextStyle(
+                    style: const  TextStyle(
                       color: Colors.black,
                     ),
                   ),
                   TextSpan(
                     text: price,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
                     ),
@@ -125,9 +125,9 @@ class VehicleCard extends StatelessWidget {
                   size: iconSize,
                   color: Colors.black,
                 ),
-                SizedBox(width: 5),
+                const SizedBox(width: 5),
                 Text('$startLocation - $endLocation',
-                    style: TextStyle(color: Colors.black)),
+                    style: const TextStyle(color: Colors.black)),
               ],
             ),
             const SizedBox(
@@ -138,7 +138,7 @@ class VehicleCard extends StatelessWidget {
               child: OutlinedButton(
                 onPressed: () {},
                 child: const Text(
-                  "Commander",
+                  "Reserver",
                   style: TextStyle(color: TColors.primary),
                 ),
               ),

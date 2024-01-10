@@ -11,6 +11,7 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: TColors.white,
         title: const Text('Historique'),
         leading: Builder(
           builder: (BuildContext context) {
@@ -24,81 +25,80 @@ class HistoryScreen extends StatelessWidget {
           },
         ),
       ),
-      drawer:
-          const SidebarScreen(), // Ajouter cette ligne pour inclure le sidebar
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(5.0),
+      drawer: const SidebarScreen(), 
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.all(5.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(
+            SizedBox(
               height: TSizes.spaceBtwSections - 2,
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(10.0),
               child: HistoryItem(
                 name: 'Achat 1',
                 result: true,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(10.0),
               child: HistoryItem(
                 name: 'Achat 2',
                 result: false,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(10.0),
               child: HistoryItem(
                 name: 'Achat 1',
                 result: true,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(10.0),
               child: HistoryItem(
                 name: 'Achat 2',
                 result: false,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(10.0),
               child: HistoryItem(
                 name: 'Achat 1',
                 result: true,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(10.0),
               child: HistoryItem(
                 name: 'Achat 2',
                 result: false,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(10.0),
               child: HistoryItem(
                 name: 'Achat 2',
                 result: false,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(10.0),
               child: HistoryItem(
                 name: 'Achat 1',
                 result: true,
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: EdgeInsets.all(10.0),
               child: HistoryItem(
                 name: 'Achat 2',
                 result: false,
               ),
             ),
 
-            const SizedBox(
+            SizedBox(
               height: TSizes.spaceBtwSections,
             ),
             // Ajoutez d'autres éléments d'historique ici si nécessaire
@@ -123,7 +123,10 @@ class HistoryItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        border: Border.all(color: TColors.primary, width: 1.0),
+        border: Border.all(
+          color: result ? TColors.primary : TColors.error,
+          width: 1.0,
+        ),
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Padding(
@@ -142,12 +145,12 @@ class HistoryItem extends StatelessWidget {
                 // Ajoutez ici la logique correspondant à cet élément d'historique
               },
               child: result
-                  ? Icon(
+                  ? const Icon(
                       Icons.check_circle,
                       color: TColors.success,
                       size: 20,
                     )
-                  : Icon(
+                  : const Icon(
                       Iconsax.close_circle,
                       color: TColors.error,
                       size: 20,

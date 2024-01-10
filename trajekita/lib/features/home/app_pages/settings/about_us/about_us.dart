@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:trajekita/features/home/home/widgets/sidebar/sidebar.dart';
+import 'package:trajekita/utils/constants/colors.dart';
 import 'package:trajekita/utils/constants/sizes.dart';
 
 class AboutUsScreen extends StatelessWidget {
@@ -7,25 +9,30 @@ class AboutUsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       appBar: AppBar(
-        title: Text('À propos de nous'),
+        backgroundColor: TColors.white,
+        title: const Text('A Propos de Nous'),
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: Icon(Icons.menu), // Icône du menu
+              onPressed: () {
+                Scaffold.of(context)
+                    .openDrawer(); // Ouvre le sidebar en appuyant sur l'icône du menu
+              },
+            );
+          },
+        ),
       ),
+      drawer: const SidebarScreen(),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(height: TSizes.spaceBtwItems),
+            const SizedBox(height: TSizes.spaceBtwItems ),
             // Logo
             Image.asset('assets/images/logo/Logo_dark.png'),
-
-            // Titre
-            // Padding(
-            //   padding: const EdgeInsets.all(12),
-            //   child: Text(
-            //     'À propos de nous',
-            //     style: Theme.of(context).textTheme.headline6,
-            //   ),
-            // ),
 
             // Sous-titre
             Padding(
@@ -39,7 +46,7 @@ class AboutUsScreen extends StatelessWidget {
 
             // Texte
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -69,7 +76,7 @@ class AboutUsScreen extends StatelessWidget {
 
             // Titre
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(15),
               child: Text(
                 'Notre équipe',
                 style: Theme.of(context).textTheme.headlineSmall,
@@ -78,7 +85,7 @@ class AboutUsScreen extends StatelessWidget {
 
             // Texte
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(15),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -115,7 +122,7 @@ class AboutUsScreen extends StatelessWidget {
                     child: Image.asset(
                       'assets/images/logo/social/facebook.png',
                       fit: BoxFit.contain,
-                      height: 70,
+                      height: 60,
                     ),
                   ),
                   GestureDetector(
@@ -123,15 +130,15 @@ class AboutUsScreen extends StatelessWidget {
                     child: Image.asset(
                       'assets/images/logo/social/x.png',
                       fit: BoxFit.contain,
-                      height: 55,
+                      height: 50,
                     ),
                   ),
                   GestureDetector(
                     onTap: () {},
                     child: Image.asset(
-                      'assets/images/logo/social/instagram.jpeg',
+                      'assets/images/logo/social/insta.jpeg',
                       fit: BoxFit.contain,
-                      height: 57,
+                      height: 50,
                     ),
                   ),
                 ],
