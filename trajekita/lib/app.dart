@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:trajekita/features/authentication/screens/login/login.dart';
 import 'package:trajekita/features/authentication/screens/onboarding/onboarding.dart';
 import 'package:trajekita/features/authentication/screens/splashScreen/splashScreen.dart';
 import 'package:trajekita/features/home/app_pages/messages/messagesScreen.dart';
@@ -40,7 +41,8 @@ class _AppState extends State<App> {
       defaultTransition: Transition.leftToRightWithFade,
       transitionDuration: const Duration(milliseconds: 500),
       //home: OnBoardingScreen(),
-      home: SplashScreen(),
+      home: const LoginScreen(),
     );
   }
+
 }

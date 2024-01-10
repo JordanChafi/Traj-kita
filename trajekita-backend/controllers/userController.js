@@ -15,9 +15,7 @@ exports.registerUser = async (req, res) => {
   try {
     const { firstName, lastName, email, phone, password } = req.body;
 
-    // const userExistsQuery = 'SELECT * FROM Users WHERE Email = ? OR PhoneNumber = ?';
-    // const existingUser = await db.query(userExistsQuery, [email, phone]);
-
+    // Vérifier si l'utilisateur existe déjà
     const user = await User.findOne({ where: {
         [Op.or]: [
           { Email: email }, 
@@ -32,11 +30,8 @@ exports.registerUser = async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // const insertUserQuery = 'INSERT INTO Users (LastName, FirstName, Email, PhoneNumber, Password) VALUES (?, ?, ?, ?, ?)';
-    // await db.query(insertUserQuery, [lastName, firstName, email, phone, hashedPassword]);
-
     // Enregistrement de l'utilisateur dans la base de données
-    await User.create({
+    const newUser = await User.create({
       FirstName: firstName,
       LastName: lastName,
       PhoneNumber: phone,
@@ -44,7 +39,27 @@ exports.registerUser = async (req, res) => {
       Password: hashedPassword,
     });
 
-    res.status(200).json({ message: 'Utilisateur enregistré avec succès' });
+    // Génération du code OTP et de sa date d'expiration pour l'inscription
+    const registrationCode = generateOtpCode(6);
+    const registrationCodeExpiry = new Date();
+    registrationCodeExpiry.setMinutes(registrationCodeExpiry.getMinutes() + 10);
+
+    // Mise à jour de l'utilisateur avec le code OTP et sa date d'expiration
+    await newUser.update({
+      RegistrationCode: registrationCode,
+      RegistrationCodeExpiry: registrationCodeExpiry,
+    });
+
+    // Envoi du code OTP par e-mail
+    //const sendOtpEmail = sendResetCodeByEmail(email, resetCode);
+    const emailSent = await sendOtpEmail(newUser.Email, registrationCode);
+
+
+    if (emailSent) {
+      res.status(200).json({ message: 'Utilisateur enregistré avec succès. Un code OTP d\'inscription a été envoyé par e-mail.' });
+    } else {
+      res.status(500).json({ error: 'Erreur lors de l\'envoi du code OTP par e-mail.' });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erreur lors de l\'inscription de l\'utilisateur' });
@@ -107,18 +122,6 @@ exports.getUserById = async (req, res) => {
   } else {
     res.status(400).json({ error: 'Utilisateur n\'existe pas' });
   }
-  // db.query(sql, [userId], (err, result) => {
-  //   if (err) {
-  //     console.error(err);
-  //     res.status(500).json({ error: 'Erreur lors de la récupération de l\'utilisateur' });
-  //   } else {
-  //     if (result.length > 0) {
-  //       res.status(200).json({ user: result[0] });
-  //     } else {
-  //       res.status(404).json({ error: 'Utilisateur non trouvé' });
-  //     }
-  //   }
-  // });
 };
 
 // Contrôleur pour l'envoi du code de réinitialisation du mot de passe par e-mail ou numéro de téléphone
@@ -149,8 +152,6 @@ exports.forgotPassword = async (req, res) => {
     if(!user){
       return res.json({message: "Utilisateur non trouvé"})
     }
-
-
     const reset_code = generateResetCode();
     const date_code = new Date(new Date().getTime() + 2 * 60*1000)
 
@@ -205,6 +206,26 @@ function generateResetCode() {
 }
 
 
+// Fonction pour envoyer le code de l'inscription par e-mail
+async function sendOtpEmail(email, registrationCode) {
+
+  const optionsEmail = {
+    from: 'parfaitkouamemks@gmail.com',
+    to: email,
+    subject: "Activation de votre compte",
+    text: "Veuillez activer votre compte avec ce code : "+registrationCode,
+  };
+
+  try {
+    const transporter = await createTransporter();
+    await transporter.sendMail(optionsEmail);
+    return true
+  } catch (erreur) {
+    console.error('Erreur lors de l\'envoi de l\'e-mail :', erreur);
+    return false
+  }
+}
+
 // Fonction pour envoyer le code de réinitialisation par e-mail
 async function sendResetCodeByEmail(email, resetCode) {
 
@@ -214,7 +235,6 @@ async function sendResetCodeByEmail(email, resetCode) {
     subject: "Reinitialisation Mot de passe",
     text: "Veuillez reinitialiser votre compte avec ce code : "+resetCode,
   };
-
 
   try {
     const transporter = await createTransporter();

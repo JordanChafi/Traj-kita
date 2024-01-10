@@ -23,54 +23,54 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(10.0),
+        preferredSize: const Size.fromHeight(10.0),
         child: AppBar(
           backgroundColor: Colors.black,
         ),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              SizedBox(height: TSizes.defaultSpace),
-              Text(
+              const SizedBox(height: TSizes.defaultSpace),
+              const Text(
                 'Proposer un Trajet',
                 style: TextStyle(
                   fontSize: 24.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 10.0),
-              Text(
+              const SizedBox(height: 10.0),
+              const Text(
                 'Veuillez entrer votre lieu de départ et votre lieu d\'arrivée :',
                 style: TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey,
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Lieu de départ',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.location_on),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Lieu d\'arrivée',
                   border: OutlineInputBorder(),
                   prefixIcon: Icon(Icons.my_location),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'Places disponibles',
                     style: TextStyle(
                       fontSize: 16.0,
@@ -88,7 +88,7 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           iconSize: 20.0,
-                          icon: Icon(Icons.remove),
+                          icon: const Icon(Icons.remove),
                           color: TColors.primary,
                           onPressed: () {
                             setState(() {
@@ -116,7 +116,7 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                         child: IconButton(
                           padding: EdgeInsets.zero,
                           iconSize: 20.0,
-                          icon: Icon(Icons.add),
+                          icon: const Icon(Icons.add),
                           color: TColors.primary,
                           onPressed: () {
                             setState(() {
@@ -129,11 +129,11 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: TSizes.spaceBtwSections),
+              const SizedBox(height: TSizes.spaceBtwSections),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(
+                  const Text(
                     'Sélectionner un véhicule',
                     style: TextStyle(
                       fontSize: 16.0,
@@ -157,7 +157,7 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                             ? 'Ajouter'
                             : 'Modifier',
                         style:
-                            TextStyle(fontSize: 14.0, color: TColors.primary),
+                            const TextStyle(fontSize: 14.0, color: TColors.primary),
                       ),
                     ),
                   ),
@@ -169,7 +169,7 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                       carPlate.isNotEmpty ||
                       rideAmount.isNotEmpty
                   ? Container(
-                      padding: EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                           vertical: 15.0, horizontal: 10.0),
                       decoration: BoxDecoration(
                         border: Border.all(color: TColors.primary),
@@ -179,9 +179,9 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                         children: [
                           //SizedBox(height: TSizes.defaultSpace),
                           Padding(
-                            padding: EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.only(left: 10.0),
                             child: RichText(
-                              text: TextSpan(
+                              text: const TextSpan(
                                 text: 'Détails du véhicule',
                                 style: TextStyle(
                                   color: TColors.black,
@@ -191,22 +191,22 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: TSizes.spaceBtwItems),
+                          const SizedBox(height: TSizes.spaceBtwItems),
                           Padding(
-                            padding: EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.only(left: 10.0),
                             child: RichText(
                               text: TextSpan(
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: TColors.black,
                                   fontSize: 16.0,
                                 ),
                                 children: [
-                                  TextSpan(
+                                  const TextSpan(
                                     text: 'Marque de la voiture : ',
                                   ),
                                   TextSpan(
                                     text: '$carBrand',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -214,20 +214,20 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: TSizes.spaceBtwItems),
+                          const SizedBox(height: TSizes.spaceBtwItems),
                           Padding(
-                            padding: EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.only(left: 10.0),
                             child: RichText(
                               text: TextSpan(
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: TColors.black,
                                   fontSize: 16.0,
                                 ),
                                 children: [
-                                  TextSpan(text: 'Couleur de la voiture : '),
+                                  const TextSpan(text: 'Couleur de la voiture : '),
                                   TextSpan(
                                     text: '$carColor',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -235,21 +235,21 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: TSizes.spaceBtwItems),
+                          const SizedBox(height: TSizes.spaceBtwItems),
                           Padding(
-                            padding: EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.only(left: 10.0),
                             child: RichText(
                               text: TextSpan(
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: TColors.black,
                                   fontSize: 16.0,
                                 ),
                                 children: [
-                                  TextSpan(
+                                  const TextSpan(
                                       text: 'Numéro d\'Immatriculation : '),
                                   TextSpan(
                                     text: '$carPlate',
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -257,20 +257,20 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                               ),
                             ),
                           ),
-                          SizedBox(height: TSizes.spaceBtwItems),
+                          const SizedBox(height: TSizes.spaceBtwItems),
                           Padding(
-                            padding: EdgeInsets.only(left: 10.0),
+                            padding: const EdgeInsets.only(left: 10.0),
                             child: RichText(
                               text: TextSpan(
-                                style: TextStyle(
+                                style: const TextStyle(
                                   color: TColors.black,
                                   fontSize: 16.0,
                                 ),
                                 children: [
-                                  TextSpan(text: 'Montant du trajet : '),
+                                  const TextSpan(text: 'Montant du trajet : '),
                                   TextSpan(
                                     text: '$rideAmount' + " Fcfa",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -281,12 +281,15 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                         ],
                       ),
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               const SizedBox(height: TSizes.spaceBtwSections),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {},
+                  style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all(TColors.primary),
+                ),
                   child: const Text('Créer un trajet'),
                 ),
               ),
@@ -317,7 +320,7 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
           children: [
             SingleChildScrollView(
               child: Container(
-                padding: EdgeInsets.all(20.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -326,45 +329,45 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                       isEditing
                           ? 'Modifier le véhicule'
                           : 'Ajouter un véhicule',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: TSizes.spaceBtwInputsFields,
                     ),
-                    Text('Entrer les informations sur le véhicule'),
-                    SizedBox(
+                    const Text('Entrer les informations sur le véhicule'),
+                    const SizedBox(
                       height: TSizes.spaceBtwItems,
                     ),
                     TextFormField(
                       controller: carBrandController,
-                      decoration: InputDecoration(labelText: 'Marque voiture'),
+                      decoration: const InputDecoration(labelText: 'Marque voiture'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: TSizes.spaceBtwInputsFields,
                     ),
                     TextFormField(
                       controller: carColorController,
-                      decoration: InputDecoration(labelText: 'Couleur'),
+                      decoration: const InputDecoration(labelText: 'Couleur'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: TSizes.spaceBtwInputsFields,
                     ),
                     TextFormField(
                       controller: carPlateController,
-                      decoration: InputDecoration(labelText: 'Immatriculation'),
+                      decoration: const InputDecoration(labelText: 'Immatriculation'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: TSizes.spaceBtwInputsFields,
                     ),
                     TextFormField(
                       controller: rideAmountController,
                       decoration:
-                          InputDecoration(labelText: 'Montant du trajet'),
+                          const InputDecoration(labelText: 'Montant du trajet'),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: TSizes.spaceBtwInputsFields,
                     ),
                     Row(
@@ -374,7 +377,7 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          child: Text(
+                          child: const Text(
                             'Annuler',
                             style: TextStyle(
                               color: TColors.error,
@@ -396,7 +399,7 @@ class _HomeOfferRideScreenState extends State<HomeOfferRideScreen> {
                           },
                           child: Text(
                             isEditing ? 'Modifier' : 'Ajouter',
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: TColors.primary,
                               fontSize: 16.0,
                             ),

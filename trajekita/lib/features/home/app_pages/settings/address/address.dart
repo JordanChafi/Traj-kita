@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:trajekita/features/home/home/widgets/sidebar/sidebar.dart';
 import 'package:trajekita/utils/constants/colors.dart';
 import 'package:trajekita/utils/constants/sizes.dart';
 
@@ -10,30 +11,46 @@ class AddressScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: TColors.white,
         title: const Text('Mes Adresses'),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: AddressItem(
-                name: 'Domicile',
-                location: '123, Yopougon Maroc',
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: AddressItem(
-                name: 'Bureau',
-                location: '456, Cocody Angré',
-              ),
-            ),
-            // Ajoutez d'autres éléments d'adresse ici si nécessaire
-          ],
+        leading: Builder(
+          builder: (BuildContext context) {
+            return IconButton(
+              icon: const Icon(Icons.menu), // Icône du menu
+              onPressed: () {
+                Scaffold.of(context)
+                    .openDrawer(); // Ouvre le sidebar en appuyant sur l'icône du menu
+              },
+            );
+          },
         ),
       ),
+      drawer: const SidebarScreen(), 
+     body: const SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: AddressItem(
+                  name: 'Domicile',
+                  location: '123, Yopougon Maroc',
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: AddressItem(
+                  name: 'Bureau',
+                  location: '456, Cocody Angré',
+                ),
+              ),
+              // Ajoutez d'autres éléments d'adresse ici si nécessaire
+            ],
+          ),
+        ),
+        ),
+        
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           // Ajoutez ici la logique pour ajouter une nouvelle adresse
@@ -71,7 +88,7 @@ class AddressItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
+            const Icon(
               Iconsax.location_tick,
               size: 20,
             ),
@@ -95,7 +112,7 @@ class AddressItem extends StatelessWidget {
               onTap: () {
                 _showEditOrDeleteModal(context);
               },
-              child: Icon(
+              child: const Icon(
                 Iconsax.edit,
                 size: 20,
                 color: Colors.red,
@@ -115,27 +132,27 @@ void _showAddModal(BuildContext context) {
     builder: (BuildContext context) {
       return Container(
         height: 320, // Hauteur personnalisée pour le modal
-        padding: EdgeInsets.all(18.0),
+        padding: const EdgeInsets.all(18.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            const Text(
               'Ajouter une Adresse',
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: TSizes.spaceBtwSections),
+            const SizedBox(height: TSizes.spaceBtwSections),
             TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nom de l\'adresse',
               ),
             ),
             const SizedBox(height: 20),
             TextFormField(
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Emplacement géographique',
               ),
             ),
@@ -145,7 +162,10 @@ void _showAddModal(BuildContext context) {
                 // Ajoutez ici la logique pour l'ajout de l'adresse
                 Navigator.pop(context); // Ferme la boîte de dialogue modale
               },
-              child: Text('Ajouter l\'Adresse'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(TColors.primary),
+              ),
+              child: const Text('Ajouter l\'Adresse'),
             ),
           ],
         ),
@@ -160,20 +180,20 @@ void _showEditOrDeleteModal(BuildContext context) {
     isScrollControlled: true,
     builder: (BuildContext context) {
       return Container(
-        padding: EdgeInsets.all(18.0),
+        padding: const EdgeInsets.all(18.0),
         child: Wrap(
           children: <Widget>[
             ListTile(
-              leading: Icon(Icons.edit),
-              title: Text('Modifier'),
+              leading: const Icon(Icons.edit),
+              title: const Text('Modifier'),
               onTap: () {
                 Navigator.pop(context); // Ferme le premier modal
                 _showEditModal(context); // Ouvre le second modal pour modifier
               },
             ),
             ListTile(
-              leading: Icon(Icons.delete),
-              title: Text('Supprimer'),
+              leading: const Icon(Icons.delete),
+              title: const Text('Supprimer'),
               onTap: () {
                 // Ajoutez ici la logique pour la suppression de l'adresse
                 Navigator.pop(context); // Ferme le premier modal
@@ -194,41 +214,44 @@ void _showEditModal(BuildContext context) {
     builder: (BuildContext context) {
       return Container(
         height: 330, // Hauteur personnalisée pour le modal
-        padding: EdgeInsets.all(18.0),
+        padding: const EdgeInsets.all(18.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
+            const Text(
               'Modifier cette Adresse',
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: TSizes.spaceBtwSections),
+            const SizedBox(height: TSizes.spaceBtwSections),
             TextFormField(
               initialValue:
                   'Domicile', // Remplacez par la valeur de l'adresse actuelle
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Nom de l\'adresse',
               ),
             ),
-            SizedBox(height: TSizes.spaceBtwInputsFields),
+            const SizedBox(height: TSizes.spaceBtwInputsFields),
             TextFormField(
               initialValue:
                   '123, Yopougon Maroc', // Remplacez par la valeur de l'emplacement actuel
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Emplacement géographique',
               ),
             ),
-            SizedBox(height: TSizes.spaceBtwSections),
+            const SizedBox(height: TSizes.spaceBtwSections),
             ElevatedButton(
               onPressed: () {
                 // Ajoutez ici la logique pour la modification de l'adresse
                 Navigator.pop(context); // Ferme la boîte de dialogue modale
               },
-              child: Text('Modifier l\'Adresse'),
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(TColors.primary),
+              ),
+              child: const Text('Modifier l\'Adresse'),
             ),
           ],
         ),
@@ -242,22 +265,35 @@ void _showDeleteConfirmation(BuildContext context) {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Supprimer l\'adresse'),
-        content: Text('Êtes-vous sûr de vouloir supprimer cette adresse ?'),
+        title: const Text('Supprimer l\'adresse'),
+        // content: const Text('Êtes-vous sûr de vouloir supprimer cette adresse ?'),
+        content: const Text(
+          'Êtes-vous sûr de vouloir supprimer cette adresse ?',
+          style: TextStyle(
+            color: TColors.darkGrey,
+          ),
+        ),
         actions: <Widget>[
           TextButton(
             onPressed: () {
               // Ajoutez ici la logique pour la suppression de l'adresse
               Navigator.of(context).pop();
             },
-            child: Text('Oui'),
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(TColors.error),
+            ),
+            child: const Text('Oui'),
           ),
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            child: Text('Non'),
+            style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(TColors.black),
+            ),
+            child: const Text('Non'),
           ),
+
         ],
       );
     },

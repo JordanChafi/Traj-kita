@@ -26,8 +26,8 @@ class _PaymentMethodscreenState extends State<PaymentMethodscreen> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: Text('Méthode de paiement'),
-        leading: BackButton(),
+        title: const Text('Méthode de paiement'),
+        leading: const BackButton(),
         backgroundColor: Colors.transparent,
         foregroundColor: TColors.black,
         elevation: 0,

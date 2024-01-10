@@ -9,7 +9,14 @@ class ContactUsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contactez-nous'),
+        title: const Text('Contactez-nous'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -49,7 +56,7 @@ class ContactUsScreen extends StatelessWidget {
             ),
 
             const SizedBox(
-              height: TSizes.spaceBtwSections,
+              height: TSizes.spaceBtwSections / 3,
             ),
 
             Center(
@@ -65,7 +72,7 @@ class ContactUsScreen extends StatelessWidget {
 
             // Formulaire de contact
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(20),
               child: Form(
                 child: Column(
                   children: [
@@ -95,13 +102,16 @@ class ContactUsScreen extends StatelessWidget {
                           labelText: "Message", alignLabelWithHint: true),
                     ),
 
-                    SizedBox(height: TSizes.spaceBtwSections),
+                    const SizedBox(height: TSizes.spaceBtwSections),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {},
                         child: const Text('Envoyer',
                             style: TextStyle(color: TColors.textWhite)),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all(TColors.primary),
+                            ),
                       ),
                     ),
                     const SizedBox(height: TSizes.spaceBtwSections),

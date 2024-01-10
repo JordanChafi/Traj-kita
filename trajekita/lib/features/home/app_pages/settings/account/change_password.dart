@@ -16,17 +16,24 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Changer votre Mot de Passe"),
+        title: const Text('Changer votre Mot de Passe'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(
-              height: TSizes.spaceBtwItems,
+              height: TSizes.spaceBtwItems / 5,
             ),
             Padding(
-              padding: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -54,6 +61,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               : Icons.visibility_off,
                         ),
                       ),
+                      labelStyle: TextStyle(
+                        color: TColors.darkGrey, 
+                      ),
                     ),
                   ),
                   const SizedBox(height: TSizes.spaceBtwInputsFields),
@@ -75,6 +85,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               ? Icons.visibility
                               : Icons.visibility_off,
                         ),
+                      ),
+                      labelStyle: TextStyle(
+                        color: TColors.darkGrey, 
                       ),
                     ),
                   ),
@@ -98,6 +111,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                               : Icons.visibility_off,
                         ),
                       ),
+                      labelStyle: TextStyle(
+                        color: TColors.darkGrey, 
+                      ),
                     ),
                   ),
                   const SizedBox(
@@ -108,7 +124,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     child: ElevatedButton(
                       onPressed: () {},
                       child: const Text('Valider',
-                          style: TextStyle(color: TColors.textWhite)),
+                        style: TextStyle(color: TColors.textWhite)
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(TColors.primary),
+                      ),
                     ),
                   ),
                   const SizedBox(height: TSizes.spaceBtwSections),

@@ -84,14 +84,14 @@ flutter:
 
     - assets/images/onboarding_img/
     - assets/images/logo/
-    - #assets/images/logo/Logo.png
     - assets/
     - assets/images/logo/social/
     - assets/images/icons/
     - assets/images/welcome_img/
     - assets/images/logo/social/instagram.png
     - assets/images/logo/paymentMethod/
-    - assets/images/logo/paymentMethod/momo1.png
+    - assets/images/logo/paymentMethod/momo1.png    
+    - assets/images/sidebar/profile.png                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 
   fonts:
     - family: Poppins

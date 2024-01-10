@@ -20,11 +20,11 @@ class SidebarScreen extends StatelessWidget {
             0.6, // Largeur personnalisée pour la barre latérale
         child: Column(
           children: <Widget>[
-            UserAccountsDrawerHeader(
-              accountName: const Text("John Doe"),
-              accountEmail: const Text("johnDoe@gmail.com"),
-              currentAccountPicture: const CircleAvatar(
-                backgroundImage: AssetImage('chemin/vers/votre/image'),
+            const UserAccountsDrawerHeader(
+              accountName: Text("John Doe"),
+              accountEmail: Text("johnDoe@gmail.com"),
+              currentAccountPicture: CircleAvatar(
+                backgroundImage: AssetImage('assets/images/sidebar/profile.png'),
               ),
             ),
             Expanded(
@@ -39,12 +39,12 @@ class SidebarScreen extends StatelessWidget {
                     ),
                     onTap: () {
                       // Ajoutez ici la logique pour naviguer vers la page Mon Profil
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => ProfileScreen(),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (BuildContext context) => const ProfileScreen(),
+                      //   ),
+                      // );
                     },
                   ),
                   const Divider(),
@@ -60,7 +60,7 @@ class SidebarScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (BuildContext context) => AddressScreen(),
+                          builder: (BuildContext context) => const AddressScreen(),
                         ),
                       );
                     },
@@ -78,7 +78,7 @@ class SidebarScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (BuildContext context) => HistoryScreen(),
+                          builder: (BuildContext context) => const HistoryScreen(),
                         ),
                       );
                     },
@@ -96,7 +96,7 @@ class SidebarScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (BuildContext context) => AboutUsScreen(),
+                          builder: (BuildContext context) => const AboutUsScreen(),
                         ),
                       );
                     },
@@ -111,12 +111,12 @@ class SidebarScreen extends StatelessWidget {
                     ),
                     onTap: () {
                       // Ajoutez ici la logique pour naviguer vers la page Paramètres
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) => SettingsScreen(),
-                        ),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (BuildContext context) => const SettingsScreen(),
+                      //   ),
+                      // );
                     },
                   ),
                   const Divider(),

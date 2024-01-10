@@ -23,6 +23,7 @@ class _CancellationScreenState extends State<CancellationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: TColors.white,
         title: const Text('Annulation'),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
